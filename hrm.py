@@ -7,6 +7,11 @@ import numpy
 def peakDetector(ecg_data):
     """Insert function here"""
 
+    with open(ecg_data) as csvfile:
+        heartreader = csv.DictReader(csvfile)
+    
+
+
 def instant(time, peak):
     """Insert function here"""
 
@@ -18,3 +23,6 @@ def anomaly(time, peak):
 
 def main(ecg_data, user_specified_time = 2000, brady_threshold = 50, tachy_threshold = 100):
     """Insert function here"""
+
+    ecg_dict = peakDetector(ecg_data)
+    
