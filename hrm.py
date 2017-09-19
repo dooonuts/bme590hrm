@@ -20,7 +20,7 @@ def instant(time, targetTime=0):
             if x+1 >= len(time):
                 raise "Target time is out of range of detected peaks", targetTime
             instant_dt = time[x+1] - time[x]
-    return "Instantaneous Heartrate: {} bpm".format(1/instant_dt)
+    return 1/instant_dt
 
 
 
