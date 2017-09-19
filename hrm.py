@@ -6,20 +6,23 @@ import numpy
 import pandas
 
 def peakDetector(ecg_data):
-    """Insert function here
-
-    with open(ecg_data) as csvfile:
-        heartreader = csv.DictReader(csvfile)
-        for row in heartreader:
-            voltageList=list(row["voltage"])"""
+    """Insert function here"""
 
     data = pandas.read_csv(ecg_data, converters = {"times":float,"voltage":float})
     avgVoltage = numpy.mean(data.voltage.values)
     minVoltage = numpy.min(data.voltage.values)
-    threshVoltage = avgVoltage + avgVoltage-minVoltage
+    threshVoltage = avgVoltage + avgVoltage
 
     threshTimes= numpy.where(data.voltage.values>threshVoltage)
-    print(threshTimes)
+    threshTimes2= threshTimes[0]
+    #print(threshTimes2)
+    finalTimes=[]
+
+    for idx,val in enumerate(threshTimes2):
+        if val!=threshTimes2[idx-1]+1:
+            finalTimes.append(val)
+
+    print(finalTimes)
 
 def instant(time, targetTime=0):
     """Insert function here"""
