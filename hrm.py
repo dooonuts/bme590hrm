@@ -19,11 +19,52 @@ def peakDetector(ecg_data):
     #avgVoltage = numpy.mean()
     #print(avgVoltage)
 
-def instant(time, peak):
+def instant(time, targetTime=0):
     """Insert function here"""
+    if targetTime > time[len(time)-1]:
+        raise "Target time is out of range of detected peaks", targetTime
 
-def average(time, peak):
+    for x in range(0,len(time))
+        if time[x] >= targetTime:
+            if x+1 >= len(time):
+                raise "Target time is out of range of detected peaks", targetTime
+            instant_dt = time[x+1] - time[x]
+    return 1/instant_dt
+
+
+
+def average(time, begin_time, end_time):
     """Insert function here"""
+    if time[len(time)] < end_time:
+        raise ValueError('End time occurs outside of range of csv file')
+    if time[len(time)] < begin_time:
+        raise ValueError('Begin time occurs outside of range of csv file')
+
+    begin = 0
+    end   = 0
+
+    for i in range(1, len(time)):
+        if time[i-1] == begin_time:
+            begin = i-1
+        elif (time[i-1] < begin_time and time[i] > begin_time):
+            begin = i
+        if time[i-1] == end_time:
+            end = i-1
+        elif (time[i-1] < end_time and time[i] > end_time):
+            end = i
+    
+    time_count = 0
+
+    for k in range(begin+1, end+1):
+        time_count = time[k-1] - time[k]
+    
+    div = begin-end
+    time_avg = time_count/div
+
+    return 1/time_avg
+
+    
+
 
 def anomaly(time, peak):
     """Insert function here"""
