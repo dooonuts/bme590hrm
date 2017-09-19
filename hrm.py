@@ -3,26 +3,36 @@
 import pytest
 import pytest_pep8
 import numpy
+import pandas
+import csv
 
 def peakDetector(ecg_data):
-    """Insert function here"""
+    """Insert function here
 
     with open(ecg_data) as csvfile:
         heartreader = csv.DictReader(csvfile)
+        for row in heartreader:
+            voltageList=list(row["voltage"])"""
+
+    data = pandas.read_csv(ecg_data, converters = {"times":float,"voltage":float})
+    avgVoltage = numpy.mean(data.voltage.values)
+    minVoltage = numpy.min(data.voltage.values)
+    threshVoltage = avgVoltage + minVoltage
+
+    threshTimes= numpy.where(data.voltage.values>threshVoltage)
+    print(threshTimes)
 
 def instant(time, targetTime=0):
     """Insert function here"""
     if targetTime > time[len(time)-1]:
-        raise "Target time is out of range of detected peaks", targetTime
+        raise ("Target time is out of range of detected peaks", targetTime)
 
-    for x in range(0,len(time))
+    for x in range(0,len(time)):
         if time[x] >= targetTime:
             if x+1 >= len(time):
-                raise "Target time is out of range of detected peaks", targetTime
+                raise ("Target time is out of range of detected peaks", targetTime)
             instant_dt = time[x+1] - time[x]
     return 1/instant_dt
-
-
 
 def average(time, begin_time, end_time):
     """Insert function here"""
@@ -54,9 +64,6 @@ def average(time, begin_time, end_time):
 
     return 1/time_avg
 
-    
-
-
 def anomaly(time, peak):
     """Insert function here"""
 
@@ -65,5 +72,9 @@ def main(ecg_data, user_specified_time1=0, user_specified_time2=2000, brady_thre
 
     """Insert function here"""
 
-    ecg_dict = peakDetector(ecg_data)
-    
+    ecg_dict = peakDetector('full_test.csv')
+
+
+
+if __name__ == '__main__':
+    main('full_test.csv');
