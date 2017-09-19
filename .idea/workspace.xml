@@ -1,11 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="939d9dab-8a46-41f8-8bee-0142a0f2cba3" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/full_test.csv" afterPath="$PROJECT_DIR$/full_test.csv" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/hrm.py" afterPath="$PROJECT_DIR$/hrm.py" />
-    </list>
+    <list default="true" id="939d9dab-8a46-41f8-8bee-0142a0f2cba3" name="Default" comment="" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -34,8 +30,8 @@
       <file leaf-file-name="hrm.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/hrm.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="199">
-              <caret line="17" column="21" lean-forward="false" selection-start-line="17" selection-start-column="21" selection-end-line="17" selection-end-column="21" />
+            <state relative-caret-position="300">
+              <caret line="20" column="0" lean-forward="true" selection-start-line="20" selection-start-column="0" selection-end-line="20" selection-end-column="0" />
               <folding>
                 <element signature="e#6#19#0" expanded="true" />
               </folding>
@@ -314,8 +310,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/hrm.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="199">
-          <caret line="17" column="21" lean-forward="false" selection-start-line="17" selection-start-column="21" selection-end-line="17" selection-end-column="21" />
+        <state relative-caret-position="300">
+          <caret line="20" column="0" lean-forward="true" selection-start-line="20" selection-start-column="0" selection-end-line="20" selection-end-column="0" />
           <folding>
             <element signature="e#6#19#0" expanded="true" />
           </folding>
