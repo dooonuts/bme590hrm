@@ -22,7 +22,7 @@ def peakDetector(ecg_data):
     threshTimes= numpy.where(data.voltage.values>threshVoltage)
     print(threshTimes)
 
-def instant(time, targetTime=0):
+def instant(time, targetTime):
     """Insert function here"""
     if targetTime > time[len(time)-1]:
         raise ValueError('target time is out of range of detected peaks')
@@ -35,7 +35,9 @@ def instant(time, targetTime=0):
     return 1/instant_dt
 
 def average(time, begin_time, end_time):
-    """Insert function here"""
+
+    if begin_time >= end_time:
+        raise ValueError('Begin time is before end time')
     if time[len(time)] < end_time:
         raise ValueError('End time occurs outside of range of csv file')
     if time[len(time)] < begin_time:
@@ -86,11 +88,30 @@ def anomaly(time, brady_thresh, brady_time, tachy_thresh, tachy_time):
         
 
 def main(ecg_data, user_specified_time1=0, user_specified_time2=2000, brady_threshold = 50, tachy_threshold = 100, \
-         int = False, avg = False, ano = False):
+         brady_time = 5, tachy_time = 5, inst = False, avg = False, ano = False):
 
     """Insert function here"""
 
-    ecg_dict = peakDetector('full_test.csv')
+    ecg_data = peakDetector('full_test.csv')
+    if inst:
+        instant_time = instant(ecg_data, user_specified_time1)
+        print ("Instantaneous HR: " + str(instant_time))
+        if (inst and !avg and !ano):
+            return instant_time
+
+    if avg:
+        average_time = average(ecg_data, user_specified_time1, user_specified_time2)
+        print ("Average HR from " + user_specified_time1 + " to " + user_specified_time2 + \
+                ": " + str(average_time))
+        if (avg and !inst and !ano):
+            return average_time
+
+    if ano:
+        [brady, tachy] = anomaly(ecg_data, brady_threshold, brady_time, tachy_threshold, tachy_time)
+        print ("Brady times: " + brady)
+        print ("Tachy times: " + tachy)
+        if (ano and !inst and !avg):
+            return brady tachy
 
 
 
