@@ -24,12 +24,12 @@ def peakDetector(ecg_data):
 def instant(time, targetTime=0):
     """Insert function here"""
     if targetTime > time[len(time)-1]:
-        raise ("Target time is out of range of detected peaks", targetTime)
+        raise ValueError('target time is out of range of detected peaks')
 
     for x in range(0,len(time)):
         if time[x] >= targetTime:
             if x+1 >= len(time):
-                raise ("Target time is out of range of detected peaks", targetTime)
+                raise ValueError('Target time is out of range of detected peaks')
             instant_dt = time[x+1] - time[x]
     return 1/instant_dt
 
