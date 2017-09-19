@@ -25,12 +25,12 @@ def peakDetector(ecg_data):
 def instant(time, targetTime=0):
     """Insert function here"""
     if targetTime > time[len(time)-1]:
-        raise ("Target time is out of range of detected peaks", targetTime)
+        raise ValueError('target time is out of range of detected peaks')
 
     for x in range(0,len(time)):
         if time[x] >= targetTime:
             if x+1 >= len(time):
-                raise ("Target time is out of range of detected peaks", targetTime)
+                raise ValueError('Target time is out of range of detected peaks')
             instant_dt = time[x+1] - time[x]
     return 1/instant_dt
 
@@ -64,8 +64,26 @@ def average(time, begin_time, end_time):
 
     return 1/time_avg
 
-def anomaly(time, peak):
+def anomaly(time, brady_thresh, brady_time, tachy_thresh, tachy_time):
     """Insert function here"""
+    dying_slow = 0
+    dying_fast = 0
+    for i in range(1, len(time)):
+        if 1/(time[i-1]-time[i]) < brady_thresh
+            dying_slow = time[i-1]
+        elif dying_slow != 0
+            if time[i] - dying_slow > brady_time
+                bradyTimes.append(dying_slow)
+            dying_slow = 0
+        if (time[i-1]-time[i]) > tachy_thresh
+            dying_fast = time[i-1]
+        elif dying_fast != 0
+            if time[i] - dying_fast > tachy_time
+                tachyTimes.append(dying_fast)
+            dying_fast = 0
+    return bradyTimes, tachyTimes
+            
+        
 
 def main(ecg_data, user_specified_time1=0, user_specified_time2=2000, brady_threshold = 50, tachy_threshold = 100, \
          int = False, avg = False, ano = False):
