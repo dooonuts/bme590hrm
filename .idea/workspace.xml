@@ -2,8 +2,21 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="939d9dab-8a46-41f8-8bee-0142a0f2cba3" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.gitignore" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/.gitignore" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/bme590hrm.iml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/misc.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/modules.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/vcs.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/README.md" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/environment.yml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/full_test.csv" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/hrm.py" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/instant_test.csv" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/instantaneous_creater.m" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/test_for_anomalies.py" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/test_for_averages.py" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/test_for_instantaneous.py" afterPath="" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
