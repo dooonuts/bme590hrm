@@ -4,7 +4,6 @@ import pytest
 import pytest_pep8
 import numpy
 import pandas
-import csv
 
 def peakDetector(ecg_data):
     """Insert function here
@@ -17,7 +16,7 @@ def peakDetector(ecg_data):
     data = pandas.read_csv(ecg_data, converters = {"times":float,"voltage":float})
     avgVoltage = numpy.mean(data.voltage.values)
     minVoltage = numpy.min(data.voltage.values)
-    threshVoltage = avgVoltage + minVoltage
+    threshVoltage = avgVoltage + avgVoltage-minVoltage
 
     threshTimes= numpy.where(data.voltage.values>threshVoltage)
     print(threshTimes)
