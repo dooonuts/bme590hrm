@@ -64,8 +64,26 @@ def average(time, begin_time, end_time):
 
     return 1/time_avg
 
-def anomaly(time, peak):
+def anomaly(time, brady_thresh, brady_time, tachy_thresh, tachy_time):
     """Insert function here"""
+    dying_slow = 0
+    dying_fast = 0
+    for i in range(1, len(time)):
+        if 1/(time[i-1]-time[i]) < brady_thresh
+            dying_slow = time[i-1]
+        elif dying_slow != 0
+            if time[i] - dying_slow > brady_time
+                bradyTimes.append(dying_slow)
+            dying_slow = 0
+        if (time[i-1]-time[i]) > tachy_thresh
+            dying_fast = time[i-1]
+        elif dying_fast != 0
+            if time[i] - dying_fast > tachy_time
+                tachyTimes.append(dying_fast)
+            dying_fast = 0
+    return bradyTimes, tachyTimes
+            
+        
 
 def main(ecg_data, user_specified_time1=0, user_specified_time2=2000, brady_threshold = 50, tachy_threshold = 100, \
          int = False, avg = False, ano = False):
