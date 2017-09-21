@@ -4,26 +4,27 @@ import pytest
 import pytest_pep8
 import numpy
 import pandas
+import matplotlib.pyplot as plt
 
 def peakDetector(ecg_data):
     """Insert function here"""
 
-    data = pandas.read_csv(ecg_data, converters = {"TIMES":float,"VOLTAGE":float})
+    # header is time, voltage
+    data = pandas.read_csv(ecg_data, converters = {"times":float,"voltage":float})
     avgVoltage = numpy.mean(data.voltage.values)
     minVoltage = numpy.min(data.voltage.values)
     threshVoltage = avgVoltage + avgVoltage
 
     threshTimes= numpy.where(data.voltage.values>threshVoltage)
     threshTimes2= threshTimes[0]
-    #print(threshTimes2)
-    finalTimes=[]
 
-    for idx,val in enumerate(threshTimes2):
-        # start of the first peak
-        if val!=threshTimes2[idx+1]-1:
-            finalTimes.append(val)
+    # autocorrelation
+    autocorr= numpy.correlate(threshTimes2,threshTimes2, mode= 'full');
+    plt.plot(autocorr)
+    plt.show()
+    print(autocorr)
+    # differentiation
 
-    print(finalTimes)
 
 def instant(time, targetTime):
     """Insert function here"""
