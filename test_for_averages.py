@@ -8,7 +8,7 @@ def test_average():
     assert hrm.main(full_test, avg = True)==80;
 
     # Test for range 
-    assert hrm.main(full_test, 0, 1000, avg = True)==120;
+    assert hrm.main(full_test, 30, 45, avg = True)==50;
 
 def test_outofrange_average():
 
