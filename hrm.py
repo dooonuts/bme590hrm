@@ -4,23 +4,26 @@ import pytest
 import pytest_pep8
 import numpy
 import pandas
-import csv
 
 def peakDetector(ecg_data):
-    """Insert function here
+    """Insert function here"""
 
-    with open(ecg_data) as csvfile:
-        heartreader = csv.DictReader(csvfile)
-        for row in heartreader:
-            voltageList=list(row["voltage"])"""
-
-    data = pandas.read_csv(ecg_data, converters = {"times":float,"voltage":float})
+    data = pandas.read_csv(ecg_data, converters = {"TIMES":float,"VOLTAGE":float})
     avgVoltage = numpy.mean(data.voltage.values)
     minVoltage = numpy.min(data.voltage.values)
-    threshVoltage = avgVoltage + minVoltage
+    threshVoltage = avgVoltage + avgVoltage
 
     threshTimes= numpy.where(data.voltage.values>threshVoltage)
-    print(threshTimes)
+    threshTimes2= threshTimes[0]
+    #print(threshTimes2)
+    finalTimes=[]
+
+    for idx,val in enumerate(threshTimes2):
+        # start of the first peak
+        if val!=threshTimes2[idx+1]-1:
+            finalTimes.append(val)
+
+    print(finalTimes)
 
 def instant(time, targetTime):
     """Insert function here"""
@@ -70,22 +73,22 @@ def anomaly(time, brady_thresh, brady_time, tachy_thresh, tachy_time):
     """Insert function here"""
     dying_slow = 0
     dying_fast = 0
+    bradyTimes = []
+    tachyTimes = []
     for i in range(1, len(time)):
-        if 1/(time[i-1]-time[i]) < brady_thresh
+        if 1/(time[i-1]-time[i]) < brady_thresh:
             dying_slow = time[i-1]
-        elif dying_slow != 0
-            if time[i] - dying_slow > brady_time
+        elif dying_slow != 0:
+            if time[i] - dying_slow > brady_time:
                 bradyTimes.append(dying_slow)
             dying_slow = 0
-        if (time[i-1]-time[i]) > tachy_thresh
+        if (time[i-1]-time[i]) > tachy_thresh:
             dying_fast = time[i-1]
-        elif dying_fast != 0
-            if time[i] - dying_fast > tachy_time
+        elif dying_fast != 0:
+            if time[i] - dying_fast > tachy_time:
                 tachyTimes.append(dying_fast)
             dying_fast = 0
     return bradyTimes, tachyTimes
-            
-        
 
 def main(ecg_data, user_specified_time1=0, user_specified_time2=30, brady_threshold = 50, tachy_threshold = 100, \
          brady_time = 5, tachy_time = 5, inst = False, avg = False, ano = False):
