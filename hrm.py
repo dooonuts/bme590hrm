@@ -87,32 +87,35 @@ def anomaly(time, brady_thresh, brady_time, tachy_thresh, tachy_time):
             
         
 
-def main(ecg_data, user_specified_time1=0, user_specified_time2=2000, brady_threshold = 50, tachy_threshold = 100, \
+def main(ecg_data, user_specified_time1=0, user_specified_time2=30, brady_threshold = 50, tachy_threshold = 100, \
          brady_time = 5, tachy_time = 5, inst = False, avg = False, ano = False):
 
     """Insert function here"""
 
-    ecg_data = peakDetector('full_test.csv')
+    peak_time = peakDetector(ecg_data)
+    ret_file  = open("testfile.txt", "w")
+
     if inst:
-        instant_time = instant(ecg_data, user_specified_time1)
-        print ("Instantaneous HR: " + str(instant_time))
-        if (inst and !avg and !ano):
+        instant_time = instant(peak_time, user_specified_time1)
+        ret_file.write("Instantaneous HR: " + str(instant_time))
+        if (inst and not avg and not ano):
             return instant_time
 
     if avg:
-        average_time = average(ecg_data, user_specified_time1, user_specified_time2)
-        print ("Average HR from " + user_specified_time1 + " to " + user_specified_time2 + \
+        average_time = average(peak_time, user_specified_time1, user_specified_time2)
+        ret_file.write("Average HR from " + user_specified_time1 + " to " + user_specified_time2 + \
                 ": " + str(average_time))
-        if (avg and !inst and !ano):
+        if (avg and not inst and not ano):
             return average_time
 
     if ano:
-        [brady, tachy] = anomaly(ecg_data, brady_threshold, brady_time, tachy_threshold, tachy_time)
-        print ("Brady times: " + brady)
-        print ("Tachy times: " + tachy)
-        if (ano and !inst and !avg):
-            return brady tachy
+        [brady, tachy] = anomaly(peak_time, brady_threshold, brady_time, tachy_threshold, tachy_time)
+        ret_file.write("Brady times: " + brady)
+        ret_file.write("Tachy times: " + tachy)
+        if (ano and not inst and not avg):
+            return brady, tachy
 
+    ret_file.close()
 
 
 if __name__ == '__main__':
