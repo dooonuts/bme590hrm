@@ -3,24 +3,16 @@ import hrm
 import instant_test
 import full_test
 
-def test_for_gtone_brady():
+def test_for_anomalies():
     # Test for if function can find more than one brady site
 
-    assert hrm.main('full_test.csv', ano = True) 
+    [bradyTimes, tachyTimes] = hrm.main('full_test.csv', 50, 10, 120, 10) 
+    assert bradyTimes[0] == 30
+    assert tachyTimes[0] == 75
+    assert bradyTimes[1] == 150
+    assert tachyTimes[1] == 195
 
-
-def test_for_tachycardia():
-    # Test for the default value of tachycardia, and it moving
-
-    assert hrm.main('instant_test.csv', ano = True) \
-            == "Tachycardia found at " + str(75)
-    assert hrm.main('instant_test.csv', tachy_threshold = 120, \
-            ano = True) == "Tachycardia not found"
-
-def test_for_gtone_tachy():
-    # Test for if the function can find more than one tachy site
-
-    assert hrm.main('full_test.csv', ano = True) \
-            == "Tachycardia found at " + str(75) + ", " + str(165)
-
+    [bradyNone, tachyNone] = hrm.main('full_test.csv',30,10,120,20)
+    assert bradyTimes == []
+    assert tachyTimes == []
 
