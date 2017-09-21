@@ -72,6 +72,8 @@ def anomaly(time, brady_thresh, brady_time, tachy_thresh, tachy_time):
     """Insert function here"""
     dying_slow = 0
     dying_fast = 0
+    bradyTimes = []
+    tachyTimes = []
     for i in range(1, len(time)):
         if 1/(time[i-1]-time[i]) < brady_thresh
             dying_slow = time[i-1]
