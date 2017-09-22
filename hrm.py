@@ -11,20 +11,23 @@ def peakDetector(ecg_data):
 
     # header is time, voltage
     data = pandas.read_csv(ecg_data, converters = {"times":float,"voltage":float})
-    avgVoltage = numpy.mean(data.voltage.values)
-    minVoltage = numpy.min(data.voltage.values)
-    threshVoltage = avgVoltage + avgVoltage
-
-    threshTimes= numpy.where(data.voltage.values>threshVoltage)
-    threshTimes2= threshTimes[0]
+    #avgVoltage = numpy.mean(data.voltage.values)
+    #minVoltage = numpy.min(data.voltage.values)
+    times = data.times.values
+    voltages = data.voltage.values
 
     # autocorrelation
-    autocorr= numpy.correlate(threshTimes2,threshTimes2, mode= 'full');
-    plt.plot(autocorr)
-    plt.show()
-    print(autocorr)
-    # differentiation
+    autocorr= numpy.correlate(voltages,voltages, mode= 'same');
+    #plt.plot(times,autocorr)
+    #plt.plot(times,voltages)
+    #plt.show()
 
+    # differentiation
+    diff= numpy.diff(autocorr)
+    for k in range(0,numpy.size(diff)):
+        print(diff[k])
+    peaks = numpy.where(diff==0)
+    print(peaks)
 
 def instant(time, targetTime):
     """Insert function here"""
