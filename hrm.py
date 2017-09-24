@@ -1,10 +1,10 @@
-#HRM
+# HRM
 
 import pytest
-import pytest_pep8
 import numpy
 import pandas
 import matplotlib.pyplot as plt
+
 
 def peakDetector(ecg_data):
     """
@@ -16,28 +16,29 @@ def peakDetector(ecg_data):
     """
 
     # header is time, voltage
-    data = pandas.read_csv(ecg_data, converters = {"times":float,"voltage":float})
-    #avgVoltage = numpy.mean(data.voltage.values)
-    #minVoltage = numpy.min(data.voltage.values)
+    data = pandas.read_csv(ecg_data, converters={"times": float, "voltages": float})
+    # avgVoltage = numpy.mean(data.voltages.values)
+    # minVoltage = numpy.min(data.voltages.values)
     times = data.times.values
-    voltages = data.voltage.values
-    finalTimes=[];
+    voltages = data.voltages.values
+    finalTimes = [];
 
     # autocorrelation
-    autocorr= numpy.correlate(voltages,voltages, mode= 'same');
-    #plt.plot(times,autocorr)
-    #plt.plot(times,voltages)
+    autocorr = numpy.correlate(voltages, voltages, mode='same')
+    #plt.plot(times, autocorr)
+    #plt.plot(times, voltages)
     #plt.show()
 
     # differentiation
-    diff= numpy.diff(autocorr)
-    #for k in range(0,numpy.size(diff)):
-    #    print(diff[k])
-    peaks = numpy.where(diff==0)
-    # print(peaks)
-    for l in range(0,numpy.size(peaks)):
-        finalTimes[l]=times[peaks[l]];
-    print(finalTimes);
+    diff = numpy.diff(autocorr)/numpy.diff(times);
+    for k in range(0,numpy.size(diff)):
+        print(diff[k])
+    peaks = numpy.where(diff == 0)
+    print(peaks)
+    # print (numpy.size(peaks))
+    #for l in range(0, numpy.size(peaks)):
+    #    finalTimes[l] = times[peaks[l]]
+    #print(finalTimes)
 
 def instant(time, targetTime):
     """
@@ -57,12 +58,12 @@ def instant(time, targetTime):
     if targetTime > time[len(time)-1]:
         raise ValueError('target time is out of range of detected peaks')
 
-    for x in range(0,len(time)):
+    for x in range(0, len(time)):
         if time[x] >= targetTime:
-            if x+1 >= len(time):
+            if x + 1 >= len(time):
                 raise ValueError('Target time is out of range of detected peaks')
-            instant_dt = time[x+1] - time[x]
-    return 1/instant_dt
+            instant_dt = time[x + 1] - time[x]
+    return 1 / instant_dt
 
 def average(time, begin_time, end_time):
     """
@@ -86,27 +87,28 @@ def average(time, begin_time, end_time):
         raise ValueError('Begin time occurs outside of range of csv file')
 
     begin = 0
-    end   = 0
+    end = 0
 
     for i in range(1, len(time)):
-        if time[i-1] == begin_time:
-            begin = i-1
-        elif (time[i-1] < begin_time and time[i] > begin_time):
+        if time[i - 1] == begin_time:
+            begin = i - 1
+        elif (time[i - 1] < begin_time and time[i] > begin_time):
             begin = i
-        if time[i-1] == end_time:
-            end = i-1
-        elif (time[i-1] < end_time and time[i] > end_time):
+        if time[i - 1] == end_time:
+            end = i - 1
+        elif (time[i - 1] < end_time and time[i] > end_time):
             end = i
-    
+
     time_count = 0
 
-    for k in range(begin+1, end+1):
-        time_count = time[k-1] - time[k]
-    
-    div = begin-end
-    time_avg = time_count/div
+    for k in range(begin + 1, end + 1):
+        time_count = time[k - 1] - time[k]
 
-    return 1/time_avg
+    div = begin - end
+    time_avg = time_count / div
+
+    return 1 / time_avg
+
 
 def anomaly(time, brady_thresh, brady_time, tachy_thresh, tachy_time):
     """
@@ -132,22 +134,24 @@ def anomaly(time, brady_thresh, brady_time, tachy_thresh, tachy_time):
     bradyTimes = []
     tachyTimes = []
     for i in range(1, len(time)):
-        if 1/(time[i-1]-time[i]) < brady_thresh:
-            dying_slow = time[i-1]
+        if 1 / (time[i - 1] - time[i]) < brady_thresh:
+            dying_slow = time[i - 1]
         elif dying_slow != 0:
             if time[i] - dying_slow > brady_time:
                 bradyTimes.append(dying_slow)
             dying_slow = 0
-        if (time[i-1]-time[i]) > tachy_thresh:
-            dying_fast = time[i-1]
+        if (time[i - 1] - time[i]) > tachy_thresh:
+            dying_fast = time[i - 1]
         elif dying_fast != 0:
             if time[i] - dying_fast > tachy_time:
                 tachyTimes.append(dying_fast)
             dying_fast = 0
     return bradyTimes, tachyTimes
 
-def main(ecg_data, user_specified_time1=0, user_specified_time2=30, brady_threshold = 50, tachy_threshold = 100, \
-         brady_time = 5, tachy_time = 5, inst = False, avg = False, ano = False):
+def main(ecg_data, user_specified_time1=0, user_specified_time2=30, brady_threshold=50, tachy_threshold=100, \
+         brady_time=5, tachy_time=5, inst=False, avg=False, ano=False):
+
+
 
     """
         Main function for determining information about
@@ -176,9 +180,8 @@ def main(ecg_data, user_specified_time1=0, user_specified_time2=30, brady_thresh
             returns the heart rate. Also writes to a file
 
     """
-
     peak_time = peakDetector(ecg_data)
-    ret_file  = open("testfile.txt", "w")
+    ret_file = open("testfile.txt", "w")
 
     if inst:
         instant_time = instant(peak_time, user_specified_time1)
@@ -189,7 +192,7 @@ def main(ecg_data, user_specified_time1=0, user_specified_time2=30, brady_thresh
     if avg:
         average_time = average(peak_time, user_specified_time1, user_specified_time2)
         ret_file.write("Average HR from " + user_specified_time1 + " to " + user_specified_time2 + \
-                ": " + str(average_time))
+                       ": " + str(average_time))
         if (avg and not inst and not ano):
             return average_time
 
