@@ -1,10 +1,16 @@
 import pytest
-import pytest-pep8
+import pep8
 import hrm
-import instant_test
 import full_test
 
 def test_for_anomalies():
+    """
+        Unit test for the anomaly function
+        in hrm
+
+        :param None
+        :rtype: Assertions
+    """
     # Test for if function can find more than one brady site
 
     [bradyTimes, tachyTimes] = hrm.main('full_test.csv', 50, 10, 120, 10, ano = True) 
