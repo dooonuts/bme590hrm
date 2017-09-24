@@ -1,6 +1,7 @@
 import pytest
-import hrm.py
-import csv
+import pytest-pep8
+import hrm
+
 
 def test_for_instantaneous():
     #Test for evaluating instantaneous heart rate

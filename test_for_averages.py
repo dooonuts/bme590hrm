@@ -1,5 +1,5 @@
 import pytest
-import pytest_pep8
+import pytest-pep8
 import hrm
 
 def test_average():
