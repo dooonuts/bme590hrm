@@ -15,6 +15,7 @@ def peakDetector(ecg_data):
     #minVoltage = numpy.min(data.voltage.values)
     times = data.times.values
     voltages = data.voltage.values
+    finalTimes=[];
 
     # autocorrelation
     autocorr= numpy.correlate(voltages,voltages, mode= 'same');
@@ -24,10 +25,13 @@ def peakDetector(ecg_data):
 
     # differentiation
     diff= numpy.diff(autocorr)
-    for k in range(0,numpy.size(diff)):
-        print(diff[k])
+    #for k in range(0,numpy.size(diff)):
+    #    print(diff[k])
     peaks = numpy.where(diff==0)
-    print(peaks)
+    # print(peaks)
+    for l in range(0,numpy.size(peaks)):
+        finalTimes[l]=times[peaks[l]];
+    print(finalTimes);
 
 def instant(time, targetTime):
     """Insert function here"""
