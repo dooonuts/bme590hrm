@@ -4,18 +4,18 @@
 % normal 80 bpm 80 beats in 60000
 
 %normal section 750 two beats (80 bpm)
-norm_base = rand(700,1);
+norm_base = 0.1*rand(700,1);
 temp_x = linspace(0,25,25);
 norm_peakU = temp_x.*0.1;
 norm_peakD = 2.5 - 0.1.*temp_x;
 normY = cat(1,norm_base,norm_peakU',norm_peakD');
 
 %slow dying section 1500 two beats (50 bpm)
-brady_base = rand(1450,1);
+brady_base = 0.1*rand(1450,1);
 bradyY = cat(1,brady_base,norm_peakU',norm_peakD');
 
 %fast dying section 500 two beats (120 bpm)
-tachy_base = rand(450,1);
+tachy_base = 0.1*rand(450,1);
 tachyY = cat(1,tachy_base,norm_peakU',norm_peakD');
 
 %30s living time
