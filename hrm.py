@@ -19,12 +19,13 @@ def peakDetector(ecg_data):
 
     # autocorrelation
     autocorr = numpy.correlate(voltages, voltages, mode='same')
-    #plt.plot(times, autocorr)
+    plt.plot(times, autocorr)
     #plt.plot(times, voltages)
-    #plt.show()
+    plt.show()
 
     # differentiation
-    diff = numpy.diff(autocorr)/numpy.diff(times);
+    #diff = numpy.diff(autocorr)/numpy.diff(times);
+    diff = numpy.diff(autocorr);
     for k in range(0,numpy.size(diff)):
         print(diff[k])
     peaks = numpy.where(diff == 0)
