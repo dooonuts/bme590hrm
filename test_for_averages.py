@@ -12,7 +12,7 @@ def test_average():
     assert hrm.main('full_test.csv', avg = True)==80;
 
     # Test for range 
-    assert hrm.main('full_test.csv', 30, 45, avg = True)==50;
+    assert hrm.main('full_test.csv', 30000, 45000, avg = True)==50;
 
 def test_outofrange_average():
     """ Unit test for checking ValueErrors in avg fun of hrm
