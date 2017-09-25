@@ -4,8 +4,7 @@ import hrm
 import full_test
 
 def test_for_anomalies():
-    """
-        Unit test for the anomaly function
+    """ Unit test for the anomaly function
         in hrm
 
         :param None

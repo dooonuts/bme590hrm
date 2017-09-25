@@ -4,8 +4,7 @@ import hrm
 
 
 def test_for_instantaneous():
-    """ 
-        Unit test for checking instantaneous functionality
+    """ Unit test for checking instantaneous functionality
         
         :param None
         :rtype: Assertions
