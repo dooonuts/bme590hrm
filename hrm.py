@@ -35,20 +35,14 @@ def peakDetector(ecg_data):
 
     diff = numpy.diff(autocorr)
 
-    diffcheck=[]
     for k in range(0,numpy.size(diff)):
         print(diff[k])
         if((diff[k] >= -0.25) and (diff[k] <= 0.25)):
-            diffcheck.append(k)
+            finalTimes.append(k)
 
     #print(numpy.size(diffcheck))
     #print(diffcheck)
-    return diffcheck
-
-    """Scipy Method"""
-
-    #peaks = scipy.signal.find_peaks_cwt(voltages, 50)
-    #print(peaks)
+    return finalTimes
 
     """Threshold Method"""
 
