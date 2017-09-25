@@ -11,6 +11,8 @@ def test_for_anomalies():
     # Test for if function can find more than one brady site
 
     [bradyTimes, tachyTimes] = hrm.main('full_test.csv', 50, 10, 120, 10, ano = True) 
+    print (bradyTimes)
+    print (tachyTimes)
     assert bradyTimes[0] == 30
     assert tachyTimes[0] == 75
     assert bradyTimes[1] == 150
