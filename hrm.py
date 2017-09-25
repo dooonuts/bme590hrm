@@ -82,6 +82,7 @@ def instant(time, targetTime):
             if x + 1 >= len(time):
                 raise ValueError('Target time is out of range of detected peaks')
             instant_dt = time[x + 1] - time[x]
+            break
     return 60 / instant_dt
 
 def average(time, begin_time, end_time):
@@ -171,8 +172,8 @@ def anomaly(time, brady_thresh, brady_time, tachy_thresh, tachy_time):
             dying_fast = 0
     return bradyTimes, tachyTimes
 
-def main(ecg_data, user_specified_time1=0, user_specified_time2=30000, brady_threshold=50, tachy_threshold=100, \
-         brady_time=5000, tachy_time=5000, inst=False, avg=False, ano=False):
+def main(ecg_data, user_specified_time1=0, user_specified_time2=30, brady_threshold=50, tachy_threshold=100, \
+         brady_time=5, tachy_time=5, inst=False, avg=False, ano=False):
   
     """ Main function for determining information about ECG data
         
@@ -212,7 +213,7 @@ def main(ecg_data, user_specified_time1=0, user_specified_time2=30000, brady_thr
 
     if avg:
         average_time = average(peak_time, user_specified_time1, user_specified_time2)
-        ret_file.write("Average HR from " + user_specified_time1 + " to " + user_specified_time2 + \
+        ret_file.write("Average HR from " + str(user_specified_time1) + " to " + str(user_specified_time2) + \
                        ": " + str(average_time) + "\n")
         if (avg and not inst and not ano):
             return average_time
