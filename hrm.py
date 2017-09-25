@@ -3,6 +3,7 @@
 import pytest
 import numpy
 import pandas
+import scipy.signal
 import matplotlib.pyplot as plt
 
 
@@ -21,24 +22,57 @@ def peakDetector(ecg_data):
     # minVoltage = numpy.min(data.voltages.values)
     times = data.times.values
     voltages = data.voltages.values
-    finalTimes = [];
+    finalTimes = []
+    #print(voltages)
+
+    """Differentiation/AutoCorr Method"""
 
     # autocorrelation
-    autocorr = numpy.correlate(voltages, voltages, mode='same')
+    #autocorr = numpy.correlate(voltages, voltages, mode='same')
     #plt.plot(times, autocorr)
     #plt.plot(times, voltages)
     #plt.show()
 
-    # differentiation
-    diff = numpy.diff(autocorr)/numpy.diff(times);
-    for k in range(0,numpy.size(diff)):
-        print(diff[k])
-    peaks = numpy.where(diff == 0)
-    print(peaks)
+    #diff = numpy.diff(autocorr)/numpy.diff(times);
+
+    #diff = numpy.diff(autocorr);
+
+    #diffcheck=[];
+    #for k in range(0,numpy.size(diff)):
+     #   print(diff[k])
+        #if((diff[k] >= -1) and (diff[k] <= 1)):
+        #    diffcheck.append(k);
+
+    #print(numpy.size(diff2));
+    #for l in range(0,numpy.size(diff2)):
+        #diff3 = diff[diff2[l]]
+        #print(diff[diff2[l]])
+
+    #print(diff3)
+    #peaks = numpy.where(diff3 <= 1)
+
+    #print(peaks)
     # print (numpy.size(peaks))
-    #for l in range(0, numpy.size(peaks)):
-    #    finalTimes[l] = times[peaks[l]]
+    #for m in range(0, numpy.size(peaks)):
+    #    finalTimes[m] = times[peaks[m]]
     #print(finalTimes)
+
+    """Scipy Method"""
+
+    #peaks = scipy.signal.find_peaks_cwt(voltages, 50)
+    #print(peaks)
+
+    """Threshold Method"""
+
+    peaks = numpy.where(voltages >= 2.5)
+    peaks1 = peaks[0]
+    peaks2= peaks1.tolist()
+    for i in range(1, len(peaks2)):
+        if peaks2[i]==peaks2[i-1]+1:
+            finalTimes.append(peaks2[i])
+    #print(finalTimes)
+    return finalTimes
+
 
 def instant(time, targetTime):
     """ Function that finds the heart rate at an instant time
@@ -150,7 +184,7 @@ def anomaly(time, brady_thresh, brady_time, tachy_thresh, tachy_time):
 
 def main(ecg_data, user_specified_time1=0, user_specified_time2=30, brady_threshold=50, tachy_threshold=100, \
          brady_time=5, tachy_time=5, inst=False, avg=False, ano=False):
-
+  
     """ Main function for determining information about ECG data
         
         All previous functions are

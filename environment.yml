@@ -4,6 +4,8 @@ dependencies:
   - numpy
   - scipy
   - pytest
-  - pytest-pep8
+  - pep8
   - pytest-cov
   - ipython
+  - matplotlib
+  - pandas

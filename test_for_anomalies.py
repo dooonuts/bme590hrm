@@ -1,7 +1,6 @@
 import pytest
-import pytest-pep8
+import pep8
 import hrm
-import full_test
 
 def test_for_anomalies():
     """ Unit test for the anomaly function
