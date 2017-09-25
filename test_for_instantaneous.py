@@ -13,4 +13,4 @@ def test_for_instantaneous():
 
     # Test for out of bounds error
     with pytest.raises(ValueError):
-        hrm.main('full_test.csv', inst = True, 250000)  
+        hrm.main('full_test.csv', 250000, inst = True)  
