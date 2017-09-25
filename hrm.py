@@ -34,7 +34,8 @@ def peakDetector(ecg_data):
     diff = numpy.diff(autocorr);
     for k in range(0,numpy.size(diff)):
         print(diff[k])
-    peaks = numpy.where(diff == 0)
+    diff1 = numpy.where(diff >= -1)
+    peaks = numpy.where(diff1 <= 1)
     print(peaks)
     # print (numpy.size(peaks))
     #for l in range(0, numpy.size(peaks)):
