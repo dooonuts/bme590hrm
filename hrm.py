@@ -85,6 +85,7 @@ def instant(time, targetTime):
             if x + 1 >= len(time):
                 raise ValueError('Target time is out of range of detected peaks')
             instant_dt = time[x + 1] - time[x]
+            break
     return 1 / instant_dt
 
 def average(time, begin_time, end_time):
@@ -211,7 +212,7 @@ def main(ecg_data, user_specified_time1=0, user_specified_time2=30, brady_thresh
 
     if avg:
         average_time = average(peak_time, user_specified_time1, user_specified_time2)
-        ret_file.write("Average HR from " + user_specified_time1 + " to " + user_specified_time2 + \
+        ret_file.write("Average HR from " + str(user_specified_time1) + " to " + str(user_specified_time2) + \
                        ": " + str(average_time) + "\n")
         if (avg and not inst and not ano):
             return average_time
