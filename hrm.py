@@ -23,39 +23,27 @@ def peakDetector(ecg_data):
     times = data.times.values
     voltages = data.voltages.values
     finalTimes = []
-    #print(voltages)
 
     """Differentiation/AutoCorr Method"""
 
-    # autocorrelation
-    #autocorr = numpy.correlate(voltages, voltages, mode='same')
+    autocorr = numpy.correlate(voltages, voltages, mode='same')
     #plt.plot(times, autocorr)
     #plt.plot(times, voltages)
     #plt.show()
 
     #diff = numpy.diff(autocorr)/numpy.diff(times);
 
-    #diff = numpy.diff(autocorr);
+    diff = numpy.diff(autocorr)
 
-    #diffcheck=[];
-    #for k in range(0,numpy.size(diff)):
-     #   print(diff[k])
-        #if((diff[k] >= -1) and (diff[k] <= 1)):
-        #    diffcheck.append(k);
+    diffcheck=[]
+    for k in range(0,numpy.size(diff)):
+        print(diff[k])
+        if((diff[k] >= -0.25) and (diff[k] <= 0.25)):
+            diffcheck.append(k)
 
-    #print(numpy.size(diff2));
-    #for l in range(0,numpy.size(diff2)):
-        #diff3 = diff[diff2[l]]
-        #print(diff[diff2[l]])
-
-    #print(diff3)
-    #peaks = numpy.where(diff3 <= 1)
-
-    #print(peaks)
-    # print (numpy.size(peaks))
-    #for m in range(0, numpy.size(peaks)):
-    #    finalTimes[m] = times[peaks[m]]
-    #print(finalTimes)
+    #print(numpy.size(diffcheck))
+    #print(diffcheck)
+    return diffcheck
 
     """Scipy Method"""
 
@@ -64,14 +52,14 @@ def peakDetector(ecg_data):
 
     """Threshold Method"""
 
-    peaks = numpy.where(voltages >= 2.5)
-    peaks1 = peaks[0]
-    peaks2= peaks1.tolist()
-    for i in range(1, len(peaks2)):
-        if peaks2[i]==peaks2[i-1]+1:
-            finalTimes.append(peaks2[i])
+    #peaks = numpy.where(voltages >= 2.5)
+    #peaks1 = peaks[0]
+    #peaks2= peaks1.tolist()
+    #for i in range(1, len(peaks2)):
+    #    if peaks2[i]==peaks2[i-1]+1:
+    #        finalTimes.append(peaks2[i])
     #print(finalTimes)
-    return finalTimes
+    #return finalTimes
 
 
 def instant(time, targetTime):

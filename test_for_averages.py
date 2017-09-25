@@ -12,7 +12,7 @@ def test_average():
     """
 
     # Test for default values of average
-    assert hrm.main('full_test.cs', avg = True)==80;
+    assert hrm.main('full_test.csv', avg = True)==80;
 
     # Test for range 
     assert hrm.main('full_test.csv', 30, 45, avg = True)==50;
