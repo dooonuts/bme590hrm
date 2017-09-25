@@ -8,9 +8,9 @@ import matplotlib.pyplot as plt
 
 
 def peakDetector(ecg_data):
-    """
-        Function to find all of the peaks in the csv
-        the peaks will be used to find heart rate
+    """ Function to find all of the peaks in the csv
+        
+        The peaks will be used to find heart rate
         
         :param ecg_data: the initial csv file given
         :rtype: list of times where a peak occured
@@ -75,9 +75,9 @@ def peakDetector(ecg_data):
 
 
 def instant(time, targetTime):
-    """
-        Function that finds the heart rate at an instant time
-        finds the peak that corresponds to given time, if there
+    """ Function that finds the heart rate at an instant time
+        
+        Finds the peak that corresponds to given time, if there
         is not a perfect match, it will pick the closest peak after
         the given time
 
@@ -100,9 +100,9 @@ def instant(time, targetTime):
     return 1 / instant_dt
 
 def average(time, begin_time, end_time):
-    """
-        Function that finds the average heart rate over a
-        user specified range. Like the instant function, 
+    """ Function that finds the average heart rate over a user specified time
+        
+        Like the instant function, 
         the peak is chosen from the peak directly after 
         the user specified time
 
@@ -145,9 +145,9 @@ def average(time, begin_time, end_time):
 
 
 def anomaly(time, brady_thresh, brady_time, tachy_thresh, tachy_time):
-    """
-        Function for finding if there is bradycardia or tachycardia
-        in the ECG data given. The parameters are all configurable. 
+    """ Function for finding if there is bradycardia or tachycardia
+        
+        The parameters are all configurable. 
 
         :param time: list of times at which the peaks occur
         :param brady_thresh: The threshold for bradycardia, if a
@@ -184,10 +184,10 @@ def anomaly(time, brady_thresh, brady_time, tachy_thresh, tachy_time):
 
 def main(ecg_data, user_specified_time1=0, user_specified_time2=30, brady_threshold=50, tachy_threshold=100, \
          brady_time=5, tachy_time=5, inst=False, avg=False, ano=False):
-
-    """
-        Main function for determining information about
-        the ECG data provided. All previous functions are
+  
+    """ Main function for determining information about ECG data
+        
+        All previous functions are
         called by the main function to provide peaks and
         heart rates
 

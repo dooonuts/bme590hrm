@@ -3,10 +3,8 @@ import pep8
 import hrm
 
 def test_average():
-    """
-        Unit test for checking basic functionality
-        of the average function in hrm
-
+    """ Unit test for checking average fun in hrm
+        
         :param None
         :rtype: Assertions
     """
@@ -18,9 +16,7 @@ def test_average():
     assert hrm.main('full_test.csv', 30, 45, avg = True)==50;
 
 def test_outofrange_average():
-    """
-        Unit test for checking ValueErrors in
-        the average function in hrm
+    """ Unit test for checking ValueErrors in avg fun of hrm
 
         :param None
         :rtype: Errors
