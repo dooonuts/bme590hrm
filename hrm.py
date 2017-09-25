@@ -22,41 +22,51 @@ def peakDetector(ecg_data):
     # minVoltage = numpy.min(data.voltages.values)
     times = data.times.values
     voltages = data.voltages.values
-    finalTimes = []
+    finalTimes = [0]
 
     """Differentiation/AutoCorr Method"""
 
-    autocorr = numpy.correlate(voltages, voltages, mode='same')
+    #autocorr = numpy.correlate(voltages, voltages, mode='same')
     #plt.plot(times, autocorr)
     #plt.plot(times, voltages)
     #plt.show()
 
     #diff = numpy.diff(autocorr)/numpy.diff(times);
 
-    diff = numpy.diff(autocorr)
+    #diff = numpy.diff(autocorr)
 
-    for k in range(0,numpy.size(diff)):
-        #print(diff[k])
-        if((diff[k] >= -0.05) and (diff[k] <= 0.05)):
-            finalTimes.append(k)
+    #for k in range(0,numpy.size(diff)):
+    #    print(diff[k])
+    #    if((diff[k] >= -35) and (diff[k] <= 35)):
+    #        finalTimes.append(k)
 
     #print(len(finalTimes))
     #print(finalTimes)
-    msToS = 1000
-    finalTimes[:] = [x / msToS for x in finalTimes]
-    #print(finalTimes)
-    return finalTimes
-
-    """Threshold Method"""
-
-    #peaks = numpy.where(voltages >= 2.5)
-    #peaks1 = peaks[0]
-    #peaks2= peaks1.tolist()
-    #for i in range(1, len(peaks2)):
-    #    if peaks2[i]==peaks2[i-1]+1:
-    #        finalTimes.append(peaks2[i])
+    #msToS = 1000
+    #finalTimes[:] = [x / msToS for x in finalTimes]
     #print(finalTimes)
     #return finalTimes
+
+    """Threshold Method"""
+    minvoltage = numpy.min(voltages)
+    maxvoltage = numpy.max(voltages)
+    avgvoltage = numpy.average(voltages)
+
+    threshvoltage = avgvoltage*2
+
+    peaks = numpy.where(voltages >= threshvoltage)
+    peaks1 = peaks[0]
+    peaks2= peaks1.tolist()
+    boxcar= []
+    for i in range(1, len(peaks2)-1):
+        if (voltages[peaks2[i]]>=voltages[peaks2[i-1]]) and (voltages[peaks2[i]]>=voltages[peaks2[i+1]]):
+            recentval = finalTimes[len(finalTimes)-1]
+            finalTimes.append(peaks2[i])
+            if(peaks2[i]-recentval<=50):
+                finalTimes.pop()
+    finalTimes.pop(0)
+    #print(finalTimes)
+    return finalTimes
 
 
 def instant(time, targetTime):
