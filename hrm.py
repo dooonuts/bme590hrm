@@ -44,7 +44,7 @@ def peakDetector(ecg_data):
     #print(finalTimes)
     msToS = 1000
     finalTimes[:] = [x / msToS for x in finalTimes]
-    
+    #print(finalTimes)
     return finalTimes
 
     """Threshold Method"""
