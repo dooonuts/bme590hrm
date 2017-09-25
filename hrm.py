@@ -199,21 +199,25 @@ def main(ecg_data, user_specified_time1=0, user_specified_time2=30, brady_thresh
 
     if inst:
         instant_time = instant(peak_time, user_specified_time1)
-        ret_file.write("Instantaneous HR: " + str(instant_time))
+        ret_file.write("Instantaneous HR: " + str(instant_time) + "\n")
         if (inst and not avg and not ano):
             return instant_time
 
     if avg:
         average_time = average(peak_time, user_specified_time1, user_specified_time2)
         ret_file.write("Average HR from " + user_specified_time1 + " to " + user_specified_time2 + \
-                       ": " + str(average_time))
+                       ": " + str(average_time) + "\n")
         if (avg and not inst and not ano):
             return average_time
 
     if ano:
         [brady, tachy] = anomaly(peak_time, brady_threshold, brady_time, tachy_threshold, tachy_time)
-        ret_file.write("Brady times: " + brady)
-        ret_file.write("Tachy times: " + tachy)
+        ret_file.write("Brady times: ")
+        for k in range(0, len(brady)):
+            ret_file.write(str(brady[k]) + " ")
+        ret_file.write("\n Tachy times: ")
+        for n in range(0, len(tachy)):
+            ret_file.write(str(tachy[n]) + " ")
         if (ano and not inst and not avg):
             return brady, tachy
 
