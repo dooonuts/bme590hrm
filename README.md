@@ -21,9 +21,9 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
-Primary functionality in hrm.py main
-Main calls associated subfunctions including peak detection, bradycardia/
-tachycardia detection, and instantaneous/average heartrate detection.
+Primary functionality in hrm.py <br />
+Main calls associated subfunctions: peak detection, bradycardia/
+tachycardia detection, and instantaneous/average heartrate detection. <br />
 hrm.py main creates and writes to a file "testfile.txt", added calculated
 values for instantaneous heartrate, average heartrate, and whether anomalies
 were detected.
