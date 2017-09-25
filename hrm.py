@@ -35,20 +35,17 @@ def peakDetector(ecg_data):
 
     diff = numpy.diff(autocorr)
 
-    diffcheck=[]
     for k in range(0,numpy.size(diff)):
-        print(diff[k])
-        if((diff[k] >= -0.25) and (diff[k] <= 0.25)):
-            diffcheck.append(k)
+        #print(diff[k])
+        if((diff[k] >= -0.05) and (diff[k] <= 0.05)):
+            finalTimes.append(k)
 
-    #print(numpy.size(diffcheck))
-    #print(diffcheck)
-    return diffcheck
-
-    """Scipy Method"""
-
-    #peaks = scipy.signal.find_peaks_cwt(voltages, 50)
-    #print(peaks)
+    #print(len(finalTimes))
+    #print(finalTimes)
+    msToS = 1000
+    finalTimes[:] = [x / msToS for x in finalTimes]
+    #print(finalTimes)
+    return finalTimes
 
     """Threshold Method"""
 
@@ -128,6 +125,10 @@ def average(time, begin_time, end_time):
         time_count = time[k - 1] - time[k]
 
     div = begin - end
+
+    if div == 0:
+        raise ValueError('Begin and End time are too close')
+
     time_avg = time_count / div
 
     return 1 / time_avg
