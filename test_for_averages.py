@@ -28,12 +28,12 @@ def test_outofrange_average():
 
     # Test for the beginning is out of range
     with pytest.raises(ValueError):
-        hrm.main(full_test, 250002, avg = True)
+        hrm.main('full_test.csv', 250002, avg = True)
 
     # Test for ending out of range
     with pytest.raises(ValueError):
-        hrm.main(full_test, 0, 2500002, avg=True)
-    
+        hrm.main('full_test.csv', 0, 2500002, avg=True)
+
     # Test for if begin time is after end time
     with pytest.raises(ValueError):
-        hrm.main(full_test, 300, 250, avg=True)
+        hrm.main('full_test.csv', 300, 250, avg=True)
