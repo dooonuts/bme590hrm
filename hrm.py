@@ -82,7 +82,7 @@ def instant(time, targetTime):
             if x + 1 >= len(time):
                 raise ValueError('Target time is out of range of detected peaks')
             instant_dt = time[x + 1] - time[x]
-    return 1 / instant_dt
+    return 60 / instant_dt
 
 def average(time, begin_time, end_time):
     """ Function that finds the average heart rate over a user specified time
@@ -130,7 +130,7 @@ def average(time, begin_time, end_time):
 
     time_avg = time_count / div
 
-    return 1 / time_avg
+    return 60 / time_avg
 
 
 def anomaly(time, brady_thresh, brady_time, tachy_thresh, tachy_time):
