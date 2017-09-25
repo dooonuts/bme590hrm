@@ -97,9 +97,9 @@ def average(time, begin_time, end_time):
 
     if begin_time >= end_time:
         raise ValueError('Begin time is before end time')
-    if time[len(time)] < end_time:
+    if time[len(time)-1] < end_time:
         raise ValueError('End time occurs outside of range of csv file')
-    if time[len(time)] < begin_time:
+    if time[len(time)-1] < begin_time:
         raise ValueError('Begin time occurs outside of range of csv file')
 
     begin = 0
