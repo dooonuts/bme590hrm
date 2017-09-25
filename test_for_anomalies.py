@@ -1,7 +1,6 @@
 import pytest
 import pep8
 import hrm
-import full_test
 
 def test_for_anomalies():
     """

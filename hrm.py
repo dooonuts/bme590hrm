@@ -23,29 +23,43 @@ def peakDetector(ecg_data):
     times = data.times.values
     voltages = data.voltages.values
     finalTimes = [];
-    print(voltages)
+    #print(voltages)
 
     # autocorrelation
-    #autocorr = numpy.correlate(voltages, voltages, mode='same')
-    #plt.plot(times, autocorr)
+    autocorr = numpy.correlate(voltages, voltages, mode='same')
+    plt.plot(times, autocorr)
     #plt.plot(times, voltages)
-    #plt.show()
+    plt.show()
 
     # differentiation
-    #diff = numpy.diff(autocorr)/numpy.diff(times);
+    diff = numpy.diff(autocorr)/numpy.diff(times);
+
     #diff = numpy.diff(autocorr);
-    #for k in range(0,numpy.size(diff)):
-    #    print(diff[k])
-    #peaks = numpy.where(diff >= -1)
-    #peaks = numpy.where(diff <= 1)
+
+    diffcheck=[];
+    for k in range(0,numpy.size(diff)):
+        print(diff[k])
+        if((diff[k] >= -1) and (diff[k] <= 1)):
+            diffcheck.append(k);
+    #diff1 = numpy.where((diff() >= -1) & (diff() <= 1))
+    #diff2 = diff1[0]
+    print(diffcheck)
+    #print(numpy.size(diff2));
+    #for l in range(0,numpy.size(diff2)):
+        #diff3 = diff[diff2[l]]
+        #print(diff[diff2[l]])
+
+    #print(diff3)
+    #peaks = numpy.where(diff3 <= 1)
+
     #print(peaks)
     # print (numpy.size(peaks))
-    #for l in range(0, numpy.size(peaks)):
-    #    finalTimes[l] = times[peaks[l]]
+    #for m in range(0, numpy.size(peaks)):
+    #    finalTimes[m] = times[peaks[m]]
     #print(finalTimes)
 
-    peaks = scipy.signal.find_peaks_cwt(voltages, 50)
-    print(peaks)
+    #peaks = scipy.signal.find_peaks_cwt(voltages, 50)
+    #print(peaks)
 
 
 def instant(time, targetTime):

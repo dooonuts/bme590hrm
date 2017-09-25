@@ -7,4 +7,5 @@ dependencies:
   - pep8
   - pytest-cov
   - ipython
-  - matplotlib.pyplot
+  - matplotlib
+  - pandas
