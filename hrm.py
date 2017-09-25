@@ -3,6 +3,7 @@
 import pytest
 import numpy
 import pandas
+import scipy.signal
 import matplotlib.pyplot as plt
 
 
@@ -22,24 +23,30 @@ def peakDetector(ecg_data):
     times = data.times.values
     voltages = data.voltages.values
     finalTimes = [];
+    print(voltages)
 
     # autocorrelation
-    autocorr = numpy.correlate(voltages, voltages, mode='same')
-    plt.plot(times, autocorr)
+    #autocorr = numpy.correlate(voltages, voltages, mode='same')
+    #plt.plot(times, autocorr)
     #plt.plot(times, voltages)
-    plt.show()
+    #plt.show()
 
     # differentiation
     #diff = numpy.diff(autocorr)/numpy.diff(times);
-    diff = numpy.diff(autocorr);
-    for k in range(0,numpy.size(diff)):
-        print(diff[k])
-    peaks = numpy.where(diff == 0)
-    print(peaks)
+    #diff = numpy.diff(autocorr);
+    #for k in range(0,numpy.size(diff)):
+    #    print(diff[k])
+    #peaks = numpy.where(diff >= -1)
+    #peaks = numpy.where(diff <= 1)
+    #print(peaks)
     # print (numpy.size(peaks))
     #for l in range(0, numpy.size(peaks)):
     #    finalTimes[l] = times[peaks[l]]
     #print(finalTimes)
+
+    peaks = scipy.signal.find_peaks_cwt(voltages, 50)
+    print(peaks)
+
 
 def instant(time, targetTime):
     """
