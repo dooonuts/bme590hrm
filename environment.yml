@@ -8,3 +8,4 @@ dependencies:
   - pytest-cov
   - ipython
   - matplotlib
+  - pandas
