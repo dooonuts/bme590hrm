@@ -36,12 +36,12 @@ def peakDetector(ecg_data):
     diff = numpy.diff(autocorr)
 
     for k in range(0,numpy.size(diff)):
-        print(diff[k])
-        if((diff[k] >= -0.25) and (diff[k] <= 0.25)):
+        #print(diff[k])
+        if((diff[k] >= -0.05) and (diff[k] <= 0.05)):
             finalTimes.append(k)
 
-    #print(numpy.size(diffcheck))
-    #print(diffcheck)
+    #print(len(finalTimes))
+    #print(finalTimes)
     return finalTimes
 
     """Threshold Method"""
