@@ -171,8 +171,8 @@ def anomaly(time, brady_thresh, brady_time, tachy_thresh, tachy_time):
             dying_fast = 0
     return bradyTimes, tachyTimes
 
-def main(ecg_data, user_specified_time1=0, user_specified_time2=30000, brady_threshold=50, tachy_threshold=100, \
-         brady_time=5000, tachy_time=5000, inst=False, avg=False, ano=False):
+def main(ecg_data, user_specified_time1=0, user_specified_time2=30, brady_threshold=50, tachy_threshold=100, \
+         brady_time=5, tachy_time=5, inst=False, avg=False, ano=False):
   
     """ Main function for determining information about ECG data
         
