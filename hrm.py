@@ -124,7 +124,7 @@ def average(time, begin_time, end_time):
             begin = i - 1
         elif (time[i - 1]/1000 < begin_time and time[i]/1000 > begin_time):
             begin = i
-        if time[i - 1/1000] == end_time:
+        if time[i - 1]/1000 == end_time:
             end = i - 1
         elif (time[i - 1]/1000 < end_time and time[i]/1000 > end_time):
             end = i
