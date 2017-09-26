@@ -176,13 +176,13 @@ def anomaly(time, brady_thresh, brady_time, tachy_thresh, tachy_time):
             dying_slow = time[i - 1]
         elif dying_slow != 0 and 60000 / (time[i] - time[i-1]) > brady_thresh:
             if time[i] - dying_slow > brady_time:
-                bradyTimes.append(dying_slow)
+                bradyTimes.append(dying_slow/1000)
             dying_slow = 0
         if 60000 / (time[i] - time[i-1]) > tachy_thresh and dying_fast == 0:
             dying_fast = time[i - 1]
         elif dying_fast != 0 and 60000 / (time[i] - time[i-1]) < tachy_thresh:
             if time[i] - dying_fast > tachy_time:
-                tachyTimes.append(dying_fast)
+                tachyTimes.append(dying_fast/1000)
             dying_fast = 0
     return bradyTimes, tachyTimes
 
