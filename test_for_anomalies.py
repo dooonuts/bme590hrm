@@ -10,7 +10,7 @@ def test_for_anomalies():
     """
     # Test for if function can find more than one brady site
 
-    [bradyTimes, tachyTimes] = hrm.main('full_test.csv', 0, 30, 50, 120, 10, 10, ano = True)
+    [bradyTimes, tachyTimes] = hrm.main('full_test.csv', 0, 30, 50, 100, 10, 10, ano = True)
     print (bradyTimes)
     print (tachyTimes)
     assert round(bradyTimes[0], 0) == 30
