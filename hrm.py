@@ -61,7 +61,7 @@ def peakDetector(ecg_data):
     for i in range(1, len(peaks2)-1):
         if (voltages[peaks2[i]]>=voltages[peaks2[i-1]]) and (voltages[peaks2[i]]>=voltages[peaks2[i+1]]):
             recentval = finalTimes[len(finalTimes)-1]
-            finalTimes.append(peaks2[i]/1000)
+            finalTimes.append(peaks2[i])
             if(peaks2[i]-recentval<=50):
                 finalTimes.pop()
     finalTimes.pop(0)
@@ -93,7 +93,7 @@ def instant(time, targetTime):
                 raise ValueError('Target time is out of range of detected peaks')
             instant_dt = time[x + 1] - time[x]
             break
-    return 60 / instant_dt
+    return (60 / instant_dt)*1000
 
 def average(time, begin_time, end_time):
     """ Function that finds the average heart rate over a user specified time
@@ -141,7 +141,7 @@ def average(time, begin_time, end_time):
 
     time_avg = time_count / div
 
-    return 60 / time_avg
+    return (60 / time_avg)*1000
 
 
 def anomaly(time, brady_thresh, brady_time, tachy_thresh, tachy_time):
