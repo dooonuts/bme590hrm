@@ -61,7 +61,7 @@ def peakDetector(ecg_data):
     for i in range(1, len(peaks2)-1):
         if (voltages[peaks2[i]]>=voltages[peaks2[i-1]]) and (voltages[peaks2[i]]>=voltages[peaks2[i+1]]):
             recentval = finalTimes[len(finalTimes)-1]
-            finalTimes.append(peaks2[i])
+            finalTimes.append(peaks2[i]/1000)
             if(peaks2[i]-recentval<=50):
                 finalTimes.pop()
     finalTimes.pop(0)
