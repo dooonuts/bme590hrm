@@ -156,11 +156,11 @@ def anomaly(time, brady_thresh, brady_time, tachy_thresh, tachy_time):
         The parameters are all configurable. 
 
         :param time: list of times at which the peaks occur
-        :param brady_thresh: The threshold for bradycardia, if a
+        :param brady_thresh (bpm): The threshold for bradycardia, if a
             heart rate is below this, it is considered bradycardia
         :param brady_time: the length of time the low heart rate has
             to last in order to be considered bradycardia
-        :param tachy_thresh: The threshold for tachycardia, if a 
+        :param tachy_thresh (bpm): The threshold for tachycardia, if a
             heart rate is above this, it is considered tachycardia
         :param tachy_time: the length of time the high heart rate has
             to last in order to be considered tachycardia
@@ -173,16 +173,17 @@ def anomaly(time, brady_thresh, brady_time, tachy_thresh, tachy_time):
     dying_fast = 0
     bradyTimes = []
     tachyTimes = []
+    counter = 0
     for i in range(1, len(time)):
-        if 60 / (time[i - 1] - time[i]) < brady_thresh and dying_slow == 0:
+        if 60000 / (time[i] - time[i-1]) < brady_thresh and dying_slow == 0:
             dying_slow = time[i - 1]
-        elif dying_slow != 0 and 60 / (time[i-1] - time[i]) > brady_thresh:
+        elif dying_slow != 0 and 60000 / (time[i] - time[i-1]) > brady_thresh:
             if time[i] - dying_slow > brady_time:
                 bradyTimes.append(dying_slow)
             dying_slow = 0
-        if 60 / (time[i - 1] - time[i]) > tachy_thresh and dying_fast == 0:
+        if 60000 / (time[i] - time[i-1]) > tachy_thresh and dying_fast == 0:
             dying_fast = time[i - 1]
-        elif dying_fast != 0 and 60 / (time[i-1] - time[i]) < tachy_thresh:
+        elif dying_fast != 0 and 60000 / (time[i] - time[i-1]) < tachy_thresh:
             if time[i] - dying_fast > tachy_time:
                 tachyTimes.append(dying_fast)
             dying_fast = 0
@@ -249,4 +250,4 @@ def main(ecg_data, user_specified_time1=0, user_specified_time2=30, brady_thresh
 
 
 if __name__ == '__main__':
-    main('full_test.csv');
+    main('full_test.csv')
