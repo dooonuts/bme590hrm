@@ -21,4 +21,3 @@ def test_for_anomalies():
     assert round(tachyTimes[1], 0) == 195
 
 
-

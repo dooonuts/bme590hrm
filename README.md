@@ -32,3 +32,7 @@ Run instructions:
 Call hrm.py with single .csv file and specified values for time range for
 average heartrate, bradycardia thresholds, and tachycardia thresholds.
 Default values exist.
+
+Notes: "times" and "voltages" must be specified in the first two rows of the
+header for the csv. Outputs for the averages and instantaneous heartrates are
+given in bpm. For brady and tachy, the outputs are given in seconds.
