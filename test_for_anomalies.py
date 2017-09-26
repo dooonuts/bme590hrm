@@ -5,6 +5,8 @@ def test_for_anomalies():
     """ Unit test for the anomaly function
         in hrm
 
+        Testing for multiple times`
+
         :param None
         :rtype: Assertions
     """
@@ -17,10 +19,5 @@ def test_for_anomalies():
     assert round(tachyTimes[0], 0) == 75
     assert round(bradyTimes[1], 0) == 150
     assert round(tachyTimes[1], 0) == 195
-
-    # Test for if cant find any
-    [bradyNone, tachyNone] = hrm.main('full_test.csv', 0, 30, 10, 120, 10, 10, ano = True)
-    assert bradyTimes == []
-    assert tachyTimes == []
 
 
