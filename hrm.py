@@ -65,7 +65,6 @@ def peakDetector(ecg_data):
             if(peaks2[i]-recentval<=50):
                 finalTimes.pop()
     finalTimes.pop(0)
-    #print(finalTimes)
     return finalTimes
 
 
