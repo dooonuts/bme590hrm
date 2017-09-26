@@ -122,30 +122,27 @@ def average(time, begin_time, end_time):
     for i in range(1, len(time)):
         if (time[i - 1]/1000 == begin_time):
             begin = i - 1
-            print (begin + str(time[i-1]))
         elif (time[i - 1]/1000 < begin_time and time[i]/1000 > begin_time):
             begin = i
-            print (begin + str(time[i])
         if (time[i - 1]/1000 == end_time):
             end = i - 1
-            print (end + str(time[i-1])
-        elif (time[i - 1]/1000 < end_time and time[i]/1000 > end_time):
+        elif (time[i - 1]/1000 < end_time) and (time[i]/1000 > end_time):
             end = i
-            print (end + str(time[i]))
 
     time_count = 0
 
     for k in range(begin + 1, end + 1):
-        time_count = time_count + (time[k - 1] - time[k])/1000
+        time_count = time_count + (time[k] - time[k-1])/1000
 
-
-    print (time_count)
-    div = begin - end
+    #print (time_count)
+    div = end - begin
 
     if div == 0:
         raise ValueError('Begin and End time are too close')
 
     time_avg = time_count / div
+
+    #print (60/time_avg)
 
     return 60 / time_avg
 
@@ -251,3 +248,4 @@ def main(ecg_data, user_specified_time1=0, user_specified_time2=30, brady_thresh
 
 if __name__ == '__main__':
     main('full_test.csv')
+

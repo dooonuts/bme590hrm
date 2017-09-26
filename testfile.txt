@@ -1,2 +1,1 @@
-Brady times: 29974 149974 
- Tachy times: 74974 194974 
+Average HR from 30 to 45: 42.10526315789473
