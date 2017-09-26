@@ -120,13 +120,13 @@ def average(time, begin_time, end_time):
     end = 0
 
     for i in range(1, len(time)):
-        if time[i - 1]/1000 == begin_time:
+        if (time[i - 1]/1000 == begin_time):
             begin = i - 1
             print (begin + str(time[i-1]))
         elif (time[i - 1]/1000 < begin_time and time[i]/1000 > begin_time):
             begin = i
             print (begin + str(time[i])
-        if time[i - 1]/1000 == end_time:
+        if (time[i - 1]/1000 == end_time):
             end = i - 1
             print (end + str(time[i-1])
         elif (time[i - 1]/1000 < end_time and time[i]/1000 > end_time):
