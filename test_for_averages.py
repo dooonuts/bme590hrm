@@ -4,6 +4,8 @@ import hrm
 def test_average():
     """ Unit test for checking average fun in hrm
         
+        testing for default and range
+
         :param None
         :rtype: Assertions
     """
