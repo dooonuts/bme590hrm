@@ -9,10 +9,10 @@ def test_average():
     """
 
     # Test for default values of average
-    assert round(hrm.main('full_test.csv', avg = True), 2)==78;
+    assert round(hrm.main('full_test.csv', avg = True), 0)==78;
 
     # Test for range 
-    assert round(hrm.main('full_test.csv', 30, 45, avg = True), 2)==50;
+    assert round(hrm.main('full_test.csv', 30, 45, avg = True), 0)==42;
 
 def test_outofrange_average():
     """ Unit test for checking ValueErrors in avg fun of hrm
