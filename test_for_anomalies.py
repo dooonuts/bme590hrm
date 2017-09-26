@@ -13,10 +13,10 @@ def test_for_anomalies():
     [bradyTimes, tachyTimes] = hrm.main('full_test.csv', 0, 30, 50, 120, 10, 10, ano = True)
     print (bradyTimes)
     print (tachyTimes)
-    assert bradyTimes[0] == 30
-    assert tachyTimes[0] == 75
-    assert bradyTimes[1] == 150
-    assert tachyTimes[1] == 195
+    assert round(bradyTimes[0], 0) == 30
+    assert round(tachyTimes[0], 0) == 75
+    assert round(bradyTimes[1], 0) == 150
+    assert round(tachyTimes[1], 0) == 195
 
     # Test for if cant find any
     [bradyNone, tachyNone] = hrm.main('full_test.csv',0,30,30,120,10,20, ano = True)
