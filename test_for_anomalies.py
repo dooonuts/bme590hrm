@@ -19,7 +19,7 @@ def test_for_anomalies():
     assert round(tachyTimes[1], 0) == 195
 
     # Test for if cant find any
-    [bradyNone, tachyNone] = hrm.main('full_test.csv',0,30,30,120,10,20, ano = True)
+    [bradyNone, tachyNone] = hrm.main('full_test.csv', 0, 30, 10, 120, 10, 10, ano = True)
     assert bradyTimes == []
     assert tachyTimes == []
 
