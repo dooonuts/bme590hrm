@@ -120,19 +120,19 @@ def average(time, begin_time, end_time):
     end = 0
 
     for i in range(1, len(time)):
-        if time[i - 1] == begin_time:
+        if time[i - 1]/1000 == begin_time:
             begin = i - 1
-        elif (time[i - 1] < begin_time and time[i] > begin_time):
+        elif (time[i - 1]/1000 < begin_time and time[i]/1000 > begin_time):
             begin = i
-        if time[i - 1] == end_time:
+        if time[i - 1/1000] == end_time:
             end = i - 1
-        elif (time[i - 1] < end_time and time[i] > end_time):
+        elif (time[i - 1]/1000 < end_time and time[i]/1000 > end_time):
             end = i
 
     time_count = 0
 
     for k in range(begin + 1, end + 1):
-        time_count = time[k - 1] - time[k]
+        time_count = (time[k - 1] - time[k])/1000
 
     div = begin - end
 
@@ -141,7 +141,7 @@ def average(time, begin_time, end_time):
 
     time_avg = time_count / div
 
-    return (60 / time_avg)*1000
+    return 60 / time_avg
 
 
 def anomaly(time, brady_thresh, brady_time, tachy_thresh, tachy_time):
