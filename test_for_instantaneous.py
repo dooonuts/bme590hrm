@@ -5,6 +5,8 @@ import hrm
 def test_for_instantaneous():
     """ Unit test for checking instantaneous functionality
         
+        Checks for out of bounds and default heart beat
+
         :param None
         :rtype: Assertions
     """
