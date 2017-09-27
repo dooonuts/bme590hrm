@@ -3,7 +3,7 @@ import hrm
 
 
 def test_for_instantaneous():
-    """ Unit test for checking instantaneous functionality
+    """Unit test for checking instantaneous functionality
         
         Checks for out of bounds and default heart beat
 
