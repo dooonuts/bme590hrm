@@ -4,9 +4,9 @@ class hrm:
         self.avgT1 = 0.0
         self.avgT2 = 10.0
 
-    def instantHr(self):
+    #def instantHr(self):
 
-    def averageHr(self):
+    #def averageHr(self):
 
-    def anomalyHr(self):
+    #def anomalyHr(self):
 
