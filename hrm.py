@@ -8,7 +8,7 @@ import matplotlib.pyplot as plt
 
 
 def peakDetector(ecg_data):
-    """ Function to find all of the peaks in the csv
+    """Function to find all of the peaks in the csv
         
         The peaks will be used to find heart rate
         
@@ -24,7 +24,7 @@ def peakDetector(ecg_data):
     voltages = data.voltages.values
     finalTimes = [0]
 
-    """Differentiation/AutoCorr Method"""
+    #Differentiation/AutoCorr Method
 
     #autocorr = numpy.correlate(voltages, voltages, mode='same')
     #plt.plot(times, autocorr)
@@ -47,7 +47,7 @@ def peakDetector(ecg_data):
     #print(finalTimes)
     #return finalTimes
 
-    """Threshold Method"""
+    #Threshold Method
     minvoltage = numpy.min(voltages)
     maxvoltage = numpy.max(voltages)
     avgvoltage = numpy.average(voltages)
@@ -61,16 +61,15 @@ def peakDetector(ecg_data):
     for i in range(1, len(peaks2)-1):
         if (voltages[peaks2[i]]>=voltages[peaks2[i-1]]) and (voltages[peaks2[i]]>=voltages[peaks2[i+1]]):
             recentval = finalTimes[len(finalTimes)-1]
-            finalTimes.append(peaks2[i]/1000)
+            finalTimes.append(peaks2[i])
             if(peaks2[i]-recentval<=50):
                 finalTimes.pop()
     finalTimes.pop(0)
-    #print(finalTimes)
     return finalTimes
 
 
 def instant(time, targetTime):
-    """ Function that finds the heart rate at an instant time
+    """Function that finds the heart rate at an instant time
         
         Finds the peak that corresponds to given time, if there
         is not a perfect match, it will pick the closest peak after
@@ -93,10 +92,10 @@ def instant(time, targetTime):
                 raise ValueError('Target time is out of range of detected peaks')
             instant_dt = time[x + 1] - time[x]
             break
-    return 60 / instant_dt
+    return (60 / instant_dt)*1000
 
 def average(time, begin_time, end_time):
-    """ Function that finds the average heart rate over a user specified time
+    """Function that finds the average heart rate over a user specified time
         
         Like the instant function, 
         the peak is chosen from the peak directly after 
@@ -120,41 +119,44 @@ def average(time, begin_time, end_time):
     end = 0
 
     for i in range(1, len(time)):
-        if time[i - 1] == begin_time:
+        if (time[i - 1]/1000 == begin_time):
             begin = i - 1
-        elif (time[i - 1] < begin_time and time[i] > begin_time):
+        elif (time[i - 1]/1000 < begin_time and time[i]/1000 > begin_time):
             begin = i
-        if time[i - 1] == end_time:
+        if (time[i - 1]/1000 == end_time):
             end = i - 1
-        elif (time[i - 1] < end_time and time[i] > end_time):
+        elif (time[i - 1]/1000 < end_time) and (time[i]/1000 > end_time):
             end = i
 
     time_count = 0
 
     for k in range(begin + 1, end + 1):
-        time_count = time[k - 1] - time[k]
+        time_count = time_count + (time[k] - time[k-1])/1000
 
-    div = begin - end
+    #print (time_count)
+    div = end - begin
 
     if div == 0:
         raise ValueError('Begin and End time are too close')
 
     time_avg = time_count / div
 
+    #print (60/time_avg)
+
     return 60 / time_avg
 
 
 def anomaly(time, brady_thresh, brady_time, tachy_thresh, tachy_time):
-    """ Function for finding if there is bradycardia or tachycardia
+    """Function for finding if there is bradycardia or tachycardia
         
         The parameters are all configurable. 
 
         :param time: list of times at which the peaks occur
-        :param brady_thresh: The threshold for bradycardia, if a
+        :param brady_thresh (bpm): The threshold for bradycardia, if a
             heart rate is below this, it is considered bradycardia
         :param brady_time: the length of time the low heart rate has
             to last in order to be considered bradycardia
-        :param tachy_thresh: The threshold for tachycardia, if a 
+        :param tachy_thresh (bpm): The threshold for tachycardia, if a
             heart rate is above this, it is considered tachycardia
         :param tachy_time: the length of time the high heart rate has
             to last in order to be considered tachycardia
@@ -167,25 +169,26 @@ def anomaly(time, brady_thresh, brady_time, tachy_thresh, tachy_time):
     dying_fast = 0
     bradyTimes = []
     tachyTimes = []
+    counter = 0
     for i in range(1, len(time)):
-        if 60 / (time[i - 1] - time[i]) < brady_thresh and dying_slow == 0:
+        if 60000 / (time[i] - time[i-1]) < brady_thresh and dying_slow == 0:
             dying_slow = time[i - 1]
-        elif dying_slow != 0 and 60 / (time[i-1] - time[i]) > brady_thresh:
+        elif dying_slow != 0 and 60000 / (time[i] - time[i-1]) > brady_thresh:
             if time[i] - dying_slow > brady_time:
-                bradyTimes.append(dying_slow)
+                bradyTimes.append(dying_slow/1000)
             dying_slow = 0
-        if 60 / (time[i - 1] - time[i]) > tachy_thresh and dying_fast == 0:
+        if 60000 / (time[i] - time[i-1]) > tachy_thresh and dying_fast == 0:
             dying_fast = time[i - 1]
-        elif dying_fast != 0 and 60 / (time[i-1] - time[i]) < tachy_thresh:
+        elif dying_fast != 0 and 60000 / (time[i] - time[i-1]) < tachy_thresh:
             if time[i] - dying_fast > tachy_time:
-                tachyTimes.append(dying_fast)
+                tachyTimes.append(dying_fast/1000)
             dying_fast = 0
     return bradyTimes, tachyTimes
 
 def main(ecg_data, user_specified_time1=0, user_specified_time2=30, brady_threshold=50, tachy_threshold=100, \
          brady_time=5, tachy_time=5, inst=False, avg=False, ano=False):
   
-    """ Main function for determining information about ECG data
+    """Main function for determining information about ECG data
         
         All previous functions are
         called by the main function to provide peaks and
@@ -243,4 +246,5 @@ def main(ecg_data, user_specified_time1=0, user_specified_time2=30, brady_thresh
 
 
 if __name__ == '__main__':
-    main('full_test.csv');
+    main('full_test.csv')
+

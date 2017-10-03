@@ -2,20 +2,22 @@ import pytest
 import hrm
 
 def test_average():
-    """ Unit test for checking average fun in hrm
+    """Unit test for checking average fun in hrm
         
+        testing for default and range
+
         :param None
         :rtype: Assertions
     """
 
     # Test for default values of average
-    assert hrm.main('full_test.csv', avg = True)==80;
+    assert round(hrm.main('full_test.csv', avg = True), 0)==78;
 
     # Test for range 
-    assert hrm.main('full_test.csv', 30, 45, avg = True)==50;
+    assert round(hrm.main('full_test.csv', 30, 45, avg = True), 0)==42;
 
 def test_outofrange_average():
-    """ Unit test for checking ValueErrors in avg fun of hrm
+    """Unit test for checking ValueErrors in avg fun of hrm
 
         :param None
         :rtype: Errors
