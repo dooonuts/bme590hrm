@@ -27,13 +27,13 @@ class Ecg_data:
         finalTimes.pop(0)
 
         self.times = finalTimes
-        self.inst  = self.instantHr(avgT1)
+        self.inst  = self.instantHr(begin_time)
         self.avg   = self.averageHR(begin_time,end_time)
         self.ano   = self.anomalyHr(bradyT, bradyThresh, tachyT, tachyThresh)
 
-    def instantHr(self, avgT1):
+    def instantHr(self, target_time):
         for x in range(0, len(self.time)):
-            if self.time[x] > avgT1:
+            if self.time[x] > target_time:
                 instant_dt = self.time[x+1] - self.time[x]
                 break
 
@@ -70,7 +70,7 @@ class Ecg_data:
             if 600000/(self.time[l]-self.time[l-1]) < bradyThresh and dying_slow == 0:
                 dying_slow = self.time[l-1]
             elif dying_slow != 0 and 60000/ (self.time[l]-self.time[l-1]) > bradyThresh:
-                if self.time[l] - dying_slow > self.bradyT:
+                if self.time[l] - dying_slow > bradyT:
                     bradyTimes.append(dying_slow/1000)
                 dying_slow = 0
             if 60000/ (self.time[l]-self.time[l-1]) < tachyThresh and dying_fast == 0:
