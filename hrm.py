@@ -18,8 +18,6 @@ def peakDetector(ecg_data):
 
     # header is time, voltage
     data = pandas.read_csv(ecg_data, converters={"times": float, "voltages": float})
-    # avgVoltage = numpy.mean(data.voltages.values)
-    # minVoltage = numpy.min(data.voltages.values)
     times = data.times.values
     voltages = data.voltages.values
     finalTimes = [0]
