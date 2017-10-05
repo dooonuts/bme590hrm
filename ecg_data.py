@@ -7,7 +7,7 @@ class Ecg_data:
     def __init__(self, filename, begin_time = 0, end_time = 10,bradyT = 5,bradyThresh = 60, \
             tachyT = 5,tachyThresh = 100):
         # put peak detection here
-        data = pandas.read_csv('testfile.txt', converters={"times": float, "voltages": float})
+        data = pandas.read_csv('full_test.txt', converters={"times": float, "voltages": float})
         voltages = data.voltages.values
         finalTimes = [0]
         avgvoltage = numpy.average(voltages)
