@@ -14,9 +14,10 @@ class Ecg_data:
             bradyThresh=60,
             tachyT=5,
             tachyThresh=100):
+
         # put peak detection here
         data = pandas.read_csv(
-            'full_test.txt', converters={
+            filename, converters={
                 "times": float, "voltages": float})
         voltages = data.voltages.values
         finalTimes = [0]
@@ -29,7 +30,8 @@ class Ecg_data:
         peaks2 = peaks1.tolist()
         boxcar = []
         for i in range(1, len(peaks2) - 1):
-            if (voltages[peaks2[i]] >= voltages[peaks2[i - 1]]) and (voltages[peaks2[i]] >= voltages[peaks2[i + 1]]):
+            if (voltages[peaks2[i]] >= voltages[peaks2[i - 1]]) and \
+               (voltages[peaks2[i]] >= voltages[peaks2[i + 1]]):
                 recentval = finalTimes[len(finalTimes) - 1]
                 finalTimes.append(peaks2[i])
                 if (peaks2[i] - recentval <= 50):

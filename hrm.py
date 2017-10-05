@@ -124,11 +124,11 @@ def average(time, begin_time, end_time):
     end = 0
 
     for i in range(1, len(time)):
-        if (time[i - 1] / 1000 == begin_time):
+        if time[i - 1] / 1000 == begin_time:
             begin = i - 1
-        elif (time[i - 1] / 1000 < begin_time and time[i] / 1000 > begin_time):
+        elif time[i - 1] / 1000 < begin_time and time[i] / 1000 > begin_time:
             begin = i
-        if (time[i - 1] / 1000 == end_time):
+        if time[i - 1] / 1000 == end_time:
             end = i - 1
         elif (time[i - 1] / 1000 < end_time) and (time[i] / 1000 > end_time):
             end = i
@@ -138,15 +138,12 @@ def average(time, begin_time, end_time):
     for k in range(begin + 1, end + 1):
         time_count = time_count + (time[k] - time[k - 1]) / 1000
 
-    #print (time_count)
     div = end - begin
 
     if div == 0:
         raise ValueError('Begin and End time are too close')
 
     time_avg = time_count / div
-
-    #print (60/time_avg)
 
     return 60 / time_avg
 
