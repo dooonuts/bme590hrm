@@ -4,7 +4,7 @@ dependencies:
   - numpy
   - scipy
   - pytest
-  - pep8
+  - pytest-pep8
   - pytest-cov
   - ipython
   - matplotlib
