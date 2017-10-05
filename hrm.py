@@ -28,14 +28,14 @@ def peakDetector(ecg_data):
 
     # Differentiation/AutoCorr Method
 
-    #autocorr = numpy.correlate(voltages, voltages, mode='same')
-    #plt.plot(times, autocorr)
-    #plt.plot(times, voltages)
+    # autocorr = numpy.correlate(voltages, voltages, mode='same')
+    # plt.plot(times, autocorr)
+    # plt.plot(times, voltages)
     # plt.show()
 
-    #diff = numpy.diff(autocorr)/numpy.diff(times);
+    # diff = numpy.diff(autocorr)/numpy.diff(times);
 
-    #diff = numpy.diff(autocorr)
+    # diff = numpy.diff(autocorr)
 
     # for k in range(0,numpy.size(diff)):
     #    print(diff[k])
@@ -44,8 +44,8 @@ def peakDetector(ecg_data):
 
     # print(len(finalTimes))
     # print(finalTimes)
-    #msToS = 1000
-    #finalTimes[:] = [x / msToS for x in finalTimes]
+    # msToS = 1000
+    # finalTimes[:] = [x / msToS for x in finalTimes]
     # print(finalTimes)
     # return finalTimes
 
@@ -59,10 +59,9 @@ def peakDetector(ecg_data):
     peaks = numpy.where(voltages >= threshvoltage)
     peaks1 = peaks[0]
     peaks2 = peaks1.tolist()
-    boxcar = []
     for i in range(1, len(peaks2) - 1):
-        if (voltages[peaks2[i]] >= voltages[peaks2[i - 1]]
-            ) and (voltages[peaks2[i]] >= voltages[peaks2[i + 1]]):
+        if (voltages[peaks2[i]] >= voltages[peaks2[i - 1]]) and \
+                (voltages[peaks2[i]] >= voltages[peaks2[i + 1]]):
             recentval = finalTimes[len(finalTimes) - 1]
             finalTimes.append(peaks2[i])
             if(peaks2[i] - recentval <= 50):
@@ -173,15 +172,19 @@ def anomaly(time, brady_thresh, brady_time, tachy_thresh, tachy_time):
     tachyTimes = []
     counter = 0
     for i in range(1, len(time)):
-        if 60000 / (time[i] - time[i - 1]) < brady_thresh and dying_slow == 0:
+        if (60000 / (time[i] - time[i - 1]) < brady_thresh) and \
+                (dying_slow == 0):
             dying_slow = time[i - 1]
-        elif dying_slow != 0 and 60000 / (time[i] - time[i - 1]) > brady_thresh:
+        elif (dying_slow != 0) and \
+                (60000 / (time[i] - time[i - 1]) > brady_thresh):
             if time[i] - dying_slow > brady_time:
                 bradyTimes.append(dying_slow / 1000)
             dying_slow = 0
-        if 60000 / (time[i] - time[i - 1]) > tachy_thresh and dying_fast == 0:
+        if (60000 / (time[i] - time[i - 1]) > tachy_thresh) and \
+                (dying_fast == 0):
             dying_fast = time[i - 1]
-        elif dying_fast != 0 and 60000 / (time[i] - time[i - 1]) < tachy_thresh:
+        elif (dying_fast != 0) and \
+                (60000 / (time[i] - time[i - 1]) < tachy_thresh):
             if time[i] - dying_fast > tachy_time:
                 tachyTimes.append(dying_fast / 1000)
             dying_fast = 0

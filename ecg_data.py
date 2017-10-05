@@ -2,7 +2,7 @@ import numpy
 import pandas
 
 
-class Ecg_data:
+class ecg_data:
     'This is a class'
 
     def __init__(
@@ -31,7 +31,7 @@ class Ecg_data:
         boxcar = []
         for i in range(1, len(peaks2) - 1):
             if (voltages[peaks2[i]] >= voltages[peaks2[i - 1]]) and \
-               (voltages[peaks2[i]] >= voltages[peaks2[i + 1]]):
+                    (voltages[peaks2[i]] >= voltages[peaks2[i + 1]]):
                 recentval = finalTimes[len(finalTimes) - 1]
                 finalTimes.append(peaks2[i])
                 if (peaks2[i] - recentval <= 50):
@@ -55,11 +55,13 @@ class Ecg_data:
         for j in range(1, len(self.time)):
             if (self.time[j - 1] / 1000 == begin_time):
                 begin = j - 1
-            elif (self.time[j - 1] / 1000 < begin_time and self.time[j] / 1000 > begin_time):
+            elif (self.time[j - 1] / 1000 < begin_time) and \
+                    (self.time[j] / 1000 > begin_time):
                 begin = j
             if (self.time[j - 1] / 1000 == end_time):
                 end = j - 1
-            elif (self.time[j - 1] / 1000 < end_time) and (self.time[j] / 1000 > end_time):
+            elif (self.time[j - 1] / 1000 < end_time) and \
+                    (self.time[j] / 1000 > end_time):
                 end = 1
         time_count = 0
 
@@ -78,17 +80,19 @@ class Ecg_data:
         tachyTimes = []
         counter = 0
         for l in range(1, len(self.time)):
-            if 600000 / (self.time[l] - self.time[l - 1]
-                         ) < bradyThresh and dying_slow == 0:
+            if 600000 / (self.time[l] - self.time[l - 1]) < bradyThresh \
+                    and dying_slow == 0:
                 dying_slow = self.time[l - 1]
-            elif dying_slow != 0 and 60000 / (self.time[l] - self.time[l - 1]) > bradyThresh:
+            elif (dying_slow != 0) and \
+                    (60000 / (self.time[l] - self.time[l - 1]) > bradyThresh):
                 if self.time[l] - dying_slow > bradyT:
                     bradyTimes.append(dying_slow / 1000)
                 dying_slow = 0
-            if 60000 / (self.time[l] - self.time[l - 1]
-                        ) < tachyThresh and dying_fast == 0:
+            if (60000 / (self.time[l] - self.time[l - 1])) < \
+                    (tachyThresh and dying_fast == 0):
                 dying_fast = self.time[l - 1]
-            elif dying_fast != 0 and 60000 / (self.time[l] - self.time[l - 1]) < tachyThresh:
+            elif (dying_fast != 0) and \
+                    (60000 / (self.time[l] - self.time[l - 1]) < tachyThresh):
                 if self.time[l] - dying_fast > tachyT:
                     tachyTimes.append(dying_fast / 1000)
                 dying_fast = 0

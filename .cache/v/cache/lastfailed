@@ -1,9 +1,0 @@
-{
-  "docs/conf.py": true,
-  "ecg_data.py": true,
-  "ecg_main.py": true,
-  "hrm.py": true,
-  "test_for_anomalies.py": true,
-  "test_for_averages.py": true,
-  "test_for_instantaneous.py": true
-}
