@@ -7,9 +7,9 @@ def test_for_instantaneous_class():
 
     """
 
-    myObject = Ecg_data('full_test.csv')
+    myHrm = ecg_data.Ecg_data('full_test.csv')
 
-    assert myObject.instantHr('full_test.csv',inst = True) == 80
+    assert myHrm.instantHr() == 80
 
     with pytest.raises(ValueError):
-        myObject.instantHr('full_test.csv',250000, inst = True)
+        myHrm.instantHr(250)

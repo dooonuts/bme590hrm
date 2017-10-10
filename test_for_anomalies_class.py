@@ -9,10 +9,8 @@ def test_for_anomalies_class():
 
     """
 
-    myObject = Ecg_data('fulltest.csv')
-    [bradyTimes, taachyTimes] = a.anomalyHr()
-    print (bradyTimes)
-    print (tachyTimes)
+    myHrm = ecg_data.ECG_data('fulltest.csv')
+    [bradyTimes, tachyTimes] = myHrm.anomalyHr()
 
     assert round(bradyTimes[0],0)==30
     assert round(tachyTimes[0],0)==75

@@ -42,7 +42,7 @@ class ecg_data:
         self.avg = self.averageHR(begin_time, end_time)
         self.ano = self.anomalyHr(bradyT, bradyThresh, tachyT, tachyThresh)
 
-    def instantHr(self, target_time):
+    def instantHr(self, target_time = 0):
         for x in range(0, len(self.time)):
             if self.time[x] > target_time:
                 instant_dt = self.time[x + 1] - self.time[x]
@@ -50,7 +50,7 @@ class ecg_data:
 
         return (60 / instant_dt) * 100
 
-    def averageHr(self, begin_time, end_time):
+    def averageHr(self, begin_time = 0, end_time = 10):
         for j in range(1, len(self.time)):
             if (self.time[j - 1] / 1000 == begin_time):
                 begin = j - 1
@@ -72,7 +72,7 @@ class ecg_data:
         time_avg = time_count / div
         return 60 / time_avg
 
-    def anomalyHr(self, bradyT, bradyThresh, tachyT, tachyThresh):
+    def anomalyHr(self, bradyT = 5, bradyThresh = 60, tachyT = 5, tachyThresh = 100):
         dying_slow = 0
         dying_fast = 0
         bradyTimes = []
