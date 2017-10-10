@@ -17,11 +17,6 @@ def peakDetector(ecg_data):
     """
 
     # header is time, voltage
-    # data = pandas.read_csv(
-    #    ecg_data,
-    #    converters={
-    #        "times": float,
-    #        "voltages": float})
     names = ["times","voltages"]
     data = pandas.read_csv(ecg_data, header=None, names=names, converters={"times":float, "voltages":float})
     times = data.times.values
@@ -39,8 +34,6 @@ def peakDetector(ecg_data):
     # diff = numpy.diff(autocorr)/numpy.diff(times);
 
     # diff = numpy.diff(autocorr)
-
-    plt.show()
 
     # for k in range(0,numpy.size(diff)):
     #    print(k)
@@ -68,18 +61,27 @@ def peakDetector(ecg_data):
     peaks = numpy.where(voltages >= threshvoltage)
     peaks1 = peaks[0]
     peaks2 = peaks1.tolist()
+    first_peak = 0.0;
+    second_peak = 0.0;
     for i in range(1, len(peaks2) - 1):
        if (voltages[peaks2[i]] >= voltages[peaks2[i - 1]]) and \
                (voltages[peaks2[i]] >= voltages[peaks2[i + 1]]):
            recentval = finalTimes[len(finalTimes) - 1]
            finalTimes.append(times[peaks2[i]])
-           if(peaks2[i] - recentval <= 50):
+           if(len(finalTimes)==2):
+               first_peak = times[peaks2[i]]
+           if(len(finalTimes)==3):
+               second_peak = times[peaks2[i]]
+           if(times[peaks2[i]] - recentval <= 0.5*(second_peak-first_peak)):
                finalTimes.pop()
     finalTimes.pop(0)
     print(len(finalTimes))
     print(finalTimes)
-    return finalTimes
 
+    plt.show()
+
+
+    return finalTimes
 
 def instant(time, targetTime):
     """Function that finds the heart rate at an instant time
@@ -281,4 +283,4 @@ def main(
 
 
 if __name__ == '__main__':
-    main('test_data/test_data1.csv')
+    main('test_data/test_data28.csv')

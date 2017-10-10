@@ -15,15 +15,13 @@ class ecg_data:
             tachyThresh=100):
 
         # put peak detection here
-        # data = pandas.read_csv(
-        #    filename, converters={
-        #        "times": float, "voltages": float})
-        # data = pandas.read_csv()
+        names = ["times", "voltages"]
+        data = pandas.read_csv(ecg_data, header=None, names=names, converters={"times": float, "voltages": float})
         voltages = data.voltages.values
         peakTimes = [0]
         avgvoltage = numpy.average(voltages)
 
-        threshvoltage = avgvoltage * 2
+        threshvoltage = abs(avgvoltage) * 2
 
         peaks = numpy.where(voltages >= threshvoltage)
         peaks1 = peaks[0]
