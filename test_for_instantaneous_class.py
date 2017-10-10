@@ -1,5 +1,5 @@
 import pytest
-import ecg_data
+import hrm_class
 
 def test_for_instantaneous_class():
     """Unit test for checking instantaneous functionality
@@ -7,7 +7,7 @@ def test_for_instantaneous_class():
 
     """
 
-    myHrm = ecg_data.Ecg_data('full_test.csv')
+    myHrm = hrm_class.Hrm_data('full_test.csv')
 
     assert myHrm.instantHr() == 80
 

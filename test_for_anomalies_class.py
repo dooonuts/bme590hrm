@@ -1,5 +1,5 @@
 import pytest
-import ecg_data
+import hrm_class
 
 def test_for_anomalies_class():
     """Unit test for anomaly method in ecg_data
@@ -9,7 +9,7 @@ def test_for_anomalies_class():
 
     """
 
-    myHrm = ecg_data.ECG_data('fulltest.csv')
+    myHrm = hrm_class.Hrm_data('fulltest.csv')
     [bradyTimes, tachyTimes] = myHrm.anomalyHr()
 
     assert round(bradyTimes[0],0)==30
