@@ -9,60 +9,62 @@ import matplotlib.pyplot as plt
 
 def peakDetector(ecg_data):
     """Function to find all of the peaks in the csv
-        
+
         The peaks will be used to find heart rate
-        
+
         :param ecg_data: the initial csv file given
         :rtype: list of times where a peak occured
     """
 
     # header is time, voltage
-    data = pandas.read_csv(ecg_data, converters={"times": float, "voltages": float})
-    # avgVoltage = numpy.mean(data.voltages.values)
-    # minVoltage = numpy.min(data.voltages.values)
+    data = pandas.read_csv(
+        ecg_data,
+        converters={
+            "times": float,
+            "voltages": float})
     times = data.times.values
     voltages = data.voltages.values
     finalTimes = [0]
 
-    #Differentiation/AutoCorr Method
+    # Differentiation/AutoCorr Method
 
-    #autocorr = numpy.correlate(voltages, voltages, mode='same')
-    #plt.plot(times, autocorr)
-    #plt.plot(times, voltages)
-    #plt.show()
+    # autocorr = numpy.correlate(voltages, voltages, mode='same')
+    # plt.plot(times, autocorr)
+    # plt.plot(times, voltages)
+    # plt.show()
 
-    #diff = numpy.diff(autocorr)/numpy.diff(times);
+    # diff = numpy.diff(autocorr)/numpy.diff(times);
 
-    #diff = numpy.diff(autocorr)
+    # diff = numpy.diff(autocorr)
 
-    #for k in range(0,numpy.size(diff)):
+    # for k in range(0,numpy.size(diff)):
     #    print(diff[k])
     #    if((diff[k] >= -35) and (diff[k] <= 35)):
     #        finalTimes.append(k)
 
-    #print(len(finalTimes))
-    #print(finalTimes)
-    #msToS = 1000
-    #finalTimes[:] = [x / msToS for x in finalTimes]
-    #print(finalTimes)
-    #return finalTimes
+    # print(len(finalTimes))
+    # print(finalTimes)
+    # msToS = 1000
+    # finalTimes[:] = [x / msToS for x in finalTimes]
+    # print(finalTimes)
+    # return finalTimes
 
-    #Threshold Method
+    # Threshold Method
     minvoltage = numpy.min(voltages)
     maxvoltage = numpy.max(voltages)
     avgvoltage = numpy.average(voltages)
 
-    threshvoltage = avgvoltage*2
+    threshvoltage = avgvoltage * 2
 
     peaks = numpy.where(voltages >= threshvoltage)
     peaks1 = peaks[0]
-    peaks2= peaks1.tolist()
-    boxcar= []
-    for i in range(1, len(peaks2)-1):
-        if (voltages[peaks2[i]]>=voltages[peaks2[i-1]]) and (voltages[peaks2[i]]>=voltages[peaks2[i+1]]):
-            recentval = finalTimes[len(finalTimes)-1]
+    peaks2 = peaks1.tolist()
+    for i in range(1, len(peaks2) - 1):
+        if (voltages[peaks2[i]] >= voltages[peaks2[i - 1]]) and \
+                (voltages[peaks2[i]] >= voltages[peaks2[i + 1]]):
+            recentval = finalTimes[len(finalTimes) - 1]
             finalTimes.append(peaks2[i])
-            if(peaks2[i]-recentval<=50):
+            if(peaks2[i] - recentval <= 50):
                 finalTimes.pop()
     finalTimes.pop(0)
     return finalTimes
@@ -70,35 +72,37 @@ def peakDetector(ecg_data):
 
 def instant(time, targetTime):
     """Function that finds the heart rate at an instant time
-        
+
         Finds the peak that corresponds to given time, if there
         is not a perfect match, it will pick the closest peak after
         the given time
 
         :param time: list of times at which peaks occur
-        :param targetTime: time specified by the user 
+        :param targetTime: time specified by the user
         :rtype: heart rate at the specified time
 
         Heart rate is taken by subtracting the times of
         the two peaks
     """
 
-    if targetTime > time[len(time)-1]:
+    if targetTime > time[len(time) - 1]:
         raise ValueError('target time is out of range of detected peaks')
 
     for x in range(0, len(time)):
         if time[x] >= targetTime:
             if x + 1 >= len(time):
-                raise ValueError('Target time is out of range of detected peaks')
+                raise ValueError(
+                    'Target time is out of range of detected peaks')
             instant_dt = time[x + 1] - time[x]
             break
-    return (60 / instant_dt)*1000
+    return (60 / instant_dt) * 1000
+
 
 def average(time, begin_time, end_time):
     """Function that finds the average heart rate over a user specified time
-        
-        Like the instant function, 
-        the peak is chosen from the peak directly after 
+
+        Like the instant function,
+        the peak is chosen from the peak directly after
         the user specified time
 
         :param time: list of times at which the peaks occur
@@ -110,30 +114,29 @@ def average(time, begin_time, end_time):
 
     if begin_time >= end_time:
         raise ValueError('Begin time is before end time')
-    if time[len(time)-1] < end_time:
+    if time[len(time) - 1] < end_time:
         raise ValueError('End time occurs outside of range of csv file')
-    if time[len(time)-1] < begin_time:
+    if time[len(time) - 1] < begin_time:
         raise ValueError('Begin time occurs outside of range of csv file')
 
     begin = 0
     end = 0
 
     for i in range(1, len(time)):
-        if (time[i - 1]/1000 == begin_time):
+        if time[i - 1] / 1000 == begin_time:
             begin = i - 1
-        elif (time[i - 1]/1000 < begin_time and time[i]/1000 > begin_time):
+        elif time[i - 1] / 1000 < begin_time and time[i] / 1000 > begin_time:
             begin = i
-        if (time[i - 1]/1000 == end_time):
+        if time[i - 1] / 1000 == end_time:
             end = i - 1
-        elif (time[i - 1]/1000 < end_time) and (time[i]/1000 > end_time):
+        elif (time[i - 1] / 1000 < end_time) and (time[i] / 1000 > end_time):
             end = i
 
     time_count = 0
 
     for k in range(begin + 1, end + 1):
-        time_count = time_count + (time[k] - time[k-1])/1000
+        time_count = time_count + (time[k] - time[k - 1]) / 1000
 
-    #print (time_count)
     div = end - begin
 
     if div == 0:
@@ -141,15 +144,13 @@ def average(time, begin_time, end_time):
 
     time_avg = time_count / div
 
-    #print (60/time_avg)
-
     return 60 / time_avg
 
 
 def anomaly(time, brady_thresh, brady_time, tachy_thresh, tachy_time):
     """Function for finding if there is bradycardia or tachycardia
-        
-        The parameters are all configurable. 
+
+        The parameters are all configurable.
 
         :param time: list of times at which the peaks occur
         :param brady_thresh (bpm): The threshold for bradycardia, if a
@@ -171,25 +172,38 @@ def anomaly(time, brady_thresh, brady_time, tachy_thresh, tachy_time):
     tachyTimes = []
     counter = 0
     for i in range(1, len(time)):
-        if 60000 / (time[i] - time[i-1]) < brady_thresh and dying_slow == 0:
+        if (60000 / (time[i] - time[i - 1]) < brady_thresh) and \
+                (dying_slow == 0):
             dying_slow = time[i - 1]
-        elif dying_slow != 0 and 60000 / (time[i] - time[i-1]) > brady_thresh:
+        elif (dying_slow != 0) and \
+                (60000 / (time[i] - time[i - 1]) > brady_thresh):
             if time[i] - dying_slow > brady_time:
-                bradyTimes.append(dying_slow/1000)
+                bradyTimes.append(dying_slow / 1000)
             dying_slow = 0
-        if 60000 / (time[i] - time[i-1]) > tachy_thresh and dying_fast == 0:
+        if (60000 / (time[i] - time[i - 1]) > tachy_thresh) and \
+                (dying_fast == 0):
             dying_fast = time[i - 1]
-        elif dying_fast != 0 and 60000 / (time[i] - time[i-1]) < tachy_thresh:
+        elif (dying_fast != 0) and \
+                (60000 / (time[i] - time[i - 1]) < tachy_thresh):
             if time[i] - dying_fast > tachy_time:
-                tachyTimes.append(dying_fast/1000)
+                tachyTimes.append(dying_fast / 1000)
             dying_fast = 0
     return bradyTimes, tachyTimes
 
-def main(ecg_data, user_specified_time1=0, user_specified_time2=30, brady_threshold=50, tachy_threshold=100, \
-         brady_time=5, tachy_time=5, inst=False, avg=False, ano=False):
-  
+
+def main(
+        ecg_data,
+        user_specified_time1=0,
+        user_specified_time2=30,
+        brady_threshold=50,
+        tachy_threshold=100,
+        brady_time=5,
+        tachy_time=5,
+        inst=False,
+        avg=False,
+        ano=False):
     """Main function for determining information about ECG data
-        
+
         All previous functions are
         called by the main function to provide peaks and
         heart rates
@@ -225,14 +239,24 @@ def main(ecg_data, user_specified_time1=0, user_specified_time2=30, brady_thresh
             return instant_time
 
     if avg:
-        average_time = average(peak_time, user_specified_time1, user_specified_time2)
-        ret_file.write("Average HR from " + str(user_specified_time1) + " to " + str(user_specified_time2) + \
-                       ": " + str(average_time) + "\n")
+        average_time = average(
+            peak_time,
+            user_specified_time1,
+            user_specified_time2)
+        ret_file.write(
+            "Average HR from " +
+            str(user_specified_time1) +
+            " to " +
+            str(user_specified_time2) +
+            ": " +
+            str(average_time) +
+            "\n")
         if (avg and not inst and not ano):
             return average_time
 
     if ano:
-        [brady, tachy] = anomaly(peak_time, brady_threshold, brady_time, tachy_threshold, tachy_time)
+        [brady, tachy] = anomaly(
+            peak_time, brady_threshold, brady_time, tachy_threshold, tachy_time)
         ret_file.write("Brady times: ")
         for k in range(0, len(brady)):
             ret_file.write(str(brady[k]) + " ")
@@ -247,4 +271,3 @@ def main(ecg_data, user_specified_time1=0, user_specified_time2=30, brady_thresh
 
 if __name__ == '__main__':
     main('full_test.csv')
-
