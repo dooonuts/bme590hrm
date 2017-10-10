@@ -1,7 +1,6 @@
 import numpy
 import pandas
 
-
 class ecg_data:
     'This is a class'
 
@@ -16,29 +15,27 @@ class ecg_data:
             tachyThresh=100):
 
         # put peak detection here
-        data = pandas.read_csv(
-            filename, converters={
-                "times": float, "voltages": float})
+        names = ["times", "voltages"]
+        data = pandas.read_csv(ecg_data, header=None, names=names, converters={"times": float, "voltages": float})
         voltages = data.voltages.values
-        finalTimes = [0]
+        peakTimes = [0]
         avgvoltage = numpy.average(voltages)
 
-        threshvoltage = avgvoltage * 2
+        threshvoltage = abs(avgvoltage) * 2
 
         peaks = numpy.where(voltages >= threshvoltage)
         peaks1 = peaks[0]
         peaks2 = peaks1.tolist()
-        boxcar = []
         for i in range(1, len(peaks2) - 1):
             if (voltages[peaks2[i]] >= voltages[peaks2[i - 1]]) and \
                     (voltages[peaks2[i]] >= voltages[peaks2[i + 1]]):
-                recentval = finalTimes[len(finalTimes) - 1]
-                finalTimes.append(peaks2[i])
+                recentval = peakTimes[len(peakTimes) - 1]
+                peakTimes.append(peaks2[i])
                 if (peaks2[i] - recentval <= 50):
-                    finalTimes.pop()
-        finalTimes.pop(0)
+                    peakTimes.pop()
+        peakTimes.pop(0)
 
-        self.times = finalTimes
+        self.times = peakTimes
         self.inst = self.instantHr(begin_time)
         self.avg = self.averageHR(begin_time, end_time)
         self.ano = self.anomalyHr(bradyT, bradyThresh, tachyT, tachyThresh)

@@ -17,30 +17,32 @@ def peakDetector(ecg_data):
     """
 
     # header is time, voltage
-    data = pandas.read_csv(
-        ecg_data,
-        converters={
-            "times": float,
-            "voltages": float})
+    names = ["times","voltages"]
+    data = pandas.read_csv(ecg_data, header=None, names=names, converters={"times":float, "voltages":float})
     times = data.times.values
     voltages = data.voltages.values
     finalTimes = [0]
+
+    # Data Visualization
 
     # Differentiation/AutoCorr Method
 
     # autocorr = numpy.correlate(voltages, voltages, mode='same')
     # plt.plot(times, autocorr)
-    # plt.plot(times, voltages)
-    # plt.show()
+    plt.plot(times, voltages)
 
     # diff = numpy.diff(autocorr)/numpy.diff(times);
 
     # diff = numpy.diff(autocorr)
 
     # for k in range(0,numpy.size(diff)):
+    #    print(k)
     #    print(diff[k])
-    #    if((diff[k] >= -35) and (diff[k] <= 35)):
-    #        finalTimes.append(k)
+    #    if((diff[k] >= -0.0015) and (diff[k] <= 0.0015)):
+        # if((diff[k] >= -1) and (diff[k] <= 1)):
+            # finalTimes.append(times[k])
+
+    # finalTimes.pop(0);
 
     # print(len(finalTimes))
     # print(finalTimes)
@@ -54,21 +56,32 @@ def peakDetector(ecg_data):
     maxvoltage = numpy.max(voltages)
     avgvoltage = numpy.average(voltages)
 
-    threshvoltage = avgvoltage * 2
+    threshvoltage = abs(avgvoltage) * 2
 
     peaks = numpy.where(voltages >= threshvoltage)
     peaks1 = peaks[0]
     peaks2 = peaks1.tolist()
+    first_peak = 0.0;
+    second_peak = 0.0;
     for i in range(1, len(peaks2) - 1):
-        if (voltages[peaks2[i]] >= voltages[peaks2[i - 1]]) and \
-                (voltages[peaks2[i]] >= voltages[peaks2[i + 1]]):
-            recentval = finalTimes[len(finalTimes) - 1]
-            finalTimes.append(peaks2[i])
-            if(peaks2[i] - recentval <= 50):
-                finalTimes.pop()
+       if (voltages[peaks2[i]] >= voltages[peaks2[i - 1]]) and \
+               (voltages[peaks2[i]] >= voltages[peaks2[i + 1]]):
+           recentval = finalTimes[len(finalTimes) - 1]
+           finalTimes.append(times[peaks2[i]])
+           if(len(finalTimes)==2):
+               first_peak = times[peaks2[i]]
+           if(len(finalTimes)==3):
+               second_peak = times[peaks2[i]]
+           if(times[peaks2[i]] - recentval <= 0.5*(second_peak-first_peak)):
+               finalTimes.pop()
     finalTimes.pop(0)
-    return finalTimes
+    print(len(finalTimes))
+    print(finalTimes)
 
+    plt.show()
+
+
+    return finalTimes
 
 def instant(time, targetTime):
     """Function that finds the heart rate at an instant time
@@ -270,4 +283,4 @@ def main(
 
 
 if __name__ == '__main__':
-    main('full_test.csv')
+    main('test_data/test_data28.csv')
