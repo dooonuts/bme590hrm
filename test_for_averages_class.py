@@ -4,7 +4,10 @@ import hrm_class
 def test_for_average_class():
     """Unit test for checking average in ecg_data
 
-    testing default and range
+        testing default and range
+        
+        :param None
+        :rtype: Assertions
 
     """
 
@@ -16,6 +19,9 @@ def test_for_average_class():
 
 def test_outofrange_average_class():
     """Unit test for checking ValueErrors
+        
+        :param None
+        :rtype: Errors
     
     """
     # test for start time out of range
