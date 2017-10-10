@@ -7,6 +7,8 @@ def test_for_anomalies_class():
 
         Testing for multiple times
 
+        :param  None
+        :rtype: Assertions
     """
 
     myHrm = hrm_class.Hrm_data('fulltest.csv')

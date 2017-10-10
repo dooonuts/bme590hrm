@@ -3,7 +3,10 @@ import hrm_class
 
 def test_for_instantaneous_class():
     """Unit test for checking instantaneous functionality
-    checks for out of bounds and default heart rate
+        checks for out of bounds and default heart rate
+    
+        :param None
+        :rtype: Assertions
 
     """
 
