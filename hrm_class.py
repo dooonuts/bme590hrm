@@ -53,7 +53,7 @@ class Hrm_data:
 
         self.time = finalTimes
         self.inst = self.instantHr(begin_time)
-        self.avg = self.averageHR(begin_time, end_time)
+        self.avg = self.averageHr(begin_time, end_time)
         self.ano = self.anomalyHr(bradyT, bradyThresh, tachyT, tachyThresh)
 
     def instantHr(self, target_time = 0):
