@@ -24,6 +24,9 @@ def test_outofrange_average_class():
         :rtype: Errors
     
     """
+
+    myHrm = hrm_class.Hrm_data('full_test.csv')
+
     # test for start time out of range
     with pytest.raises(ValueError):
         myHrm.averageHr(250)
