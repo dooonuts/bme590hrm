@@ -28,14 +28,20 @@ class hrm_data:
             bradyThresh=60,
             tachyT=5,
             tachyThresh=100):
-        """Function that initializes stuff for the whole function
+        """Function that initializes values for the whole function
 
             Finds the peak that corresponds to given time, if there
             is not a perfect match, it will pick the closest peak after
             the given time
 
             :param self: the hrm object
-            :param targetTime: time specified by the user
+            :param filename: csv file where the ECG data will be stored
+            :param begin_time: time for instHr and 1st time for avg
+            :param end_time: time where the avgHr will end
+            :param bradyT: time brady has to last to be considered brady
+            :param bradyThresh: HR at which below is brady
+            :param tachyT: time tachy has to last to be considered tachy
+            :param tachyThresh: HR at which above is tachy
             :rtype: heart rate at the specified time
 
         """
@@ -85,6 +91,16 @@ class hrm_data:
         self.ano = self.anomalyHr(bradyT, bradyThresh, tachyT, tachyThresh)
 
     def fileChecker(self, filename, names):
+        """Function that checks the file has the right types
+            for ECG_data
+
+            :param self: the hrm object
+            :param filename: csv file that contains the ecg data
+            :param names: header to help pandas work
+            :rtype: Boolean for if there is an error
+
+        """
+
         try:
             df = pandas.read_csv(
                 filename, header=None, names=names, converters={
