@@ -1,7 +1,6 @@
 import numpy
 import pandas
 
-
 class hrm_data:
     """This is a HRM class
 
@@ -48,7 +47,6 @@ class hrm_data:
         dataerror = self.fileChecker(filename, names)
         if (dataerror):
             print("Non-Numeric Value Entered")
-            return peakTimes
         else:
             ecg_data = pandas.read_csv(
                 filename, header=None, names=names, converters={
