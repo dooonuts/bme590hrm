@@ -2,7 +2,7 @@ import numpy
 import pandas
 
 
-class Hrm_data:
+class hrm_data:
     """This is a HRM class
 
        __init__ finds the peaks and sets the initial parameters
@@ -28,33 +28,49 @@ class Hrm_data:
             tachyT=5,
             tachyThresh=100):
 
-        # put peak detection here
-        data = pandas.read_csv(
-            filename, converters={
-                "times": float, "voltages": float})
-        voltages = data.voltages.values
-        finalTimes = [0]
-        avgvoltage = numpy.average(voltages)
+        peakTimes = [0]
 
-        threshvoltage = avgvoltage * 2
+        # put peak detection here
+        names = ["times", "voltages"]
+        dataerror = False
+        dataerror = fileChecker(filename, names)
+        if (dataerror == True):
+            print("Non-Numeric Value Entered")
+            return peakTimes
+
+        data = pandas.read_csv(filename, header=None, names=names, converters={"times": float, "voltages": float})
+        times = data.times.values
+        voltages = data.voltages.values
+
+        # Create Threshold
+        avgvoltage = numpy.average(voltages)
+        threshvoltage = abs(avgvoltage) * 2
 
         peaks = numpy.where(voltages >= threshvoltage)
         peaks1 = peaks[0]
         peaks2 = peaks1.tolist()
-        boxcar = []
         for i in range(1, len(peaks2) - 1):
             if (voltages[peaks2[i]] >= voltages[peaks2[i - 1]]) and \
                     (voltages[peaks2[i]] >= voltages[peaks2[i + 1]]):
-                recentval = finalTimes[len(finalTimes) - 1]
-                finalTimes.append(peaks2[i])
+                recentval = peakTimes[len(peakTimes) - 1]
+                peakTimes.append(peaks2[i])
                 if (peaks2[i] - recentval <= 50):
-                    finalTimes.pop()
-        finalTimes.pop(0)
+                    peakTimes.pop()
+        peakTimes.pop(0)
 
-        self.times = finalTimes
+        self.times = peakTimes
         self.inst = self.instantHr(begin_time)
         self.avg = self.averageHR(begin_time, end_time)
         self.ano = self.anomalyHr(bradyT, bradyThresh, tachyT, tachyThresh)
+
+    def fileChecker(self, filename, names):
+        try:
+            df = pandas.read_csv(filename, header=None, names=names, converters={"times": float, "voltages": float})
+            errBool = False
+            return errBool
+        except ValueError:
+            errBool = True
+            return errBool
 
     def instantHr(self, target_time = 0):
         """Function that finds the heart rate at an instant time

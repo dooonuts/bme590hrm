@@ -16,7 +16,7 @@ class ecg_data:
 
         # put peak detection here
         names = ["times", "voltages"]
-        data = pandas.read_csv(ecg_data, header=None, names=names, converters={"times": float, "voltages": float})
+        data = pandas.read_csv(filename, header=None, names=names, converters={"times": float, "voltages": float})
         voltages = data.voltages.values
         peakTimes = [0]
         avgvoltage = numpy.average(voltages)

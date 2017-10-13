@@ -6,6 +6,14 @@ import pandas
 import scipy.signal
 import matplotlib.pyplot as plt
 
+def fileChecker(ecg_data, names):
+    try:
+        df = pandas.read_csv(ecg_data, header=None, names=names, converters={"times":float,"voltages":float})
+        errBool = False
+        return errBool
+    except ValueError:
+        errBool = True
+        return errBool
 
 def peakDetector(ecg_data):
     """Function to find all of the peaks in the csv
@@ -15,21 +23,22 @@ def peakDetector(ecg_data):
         :param ecg_data: the initial csv file given
         :rtype: list of times where a peak occured
     """
+    peakTimes=[0]
 
-    # header is time, voltage
     names = ["times","voltages"]
+    dataerror = False
+    dataerror = fileChecker(ecg_data, names)
+    if (dataerror == True):
+        print("Non-Numeric Value Entered")
+        return peakTimes
+
     data = pandas.read_csv(ecg_data, header=None, names=names, converters={"times":float, "voltages":float})
     times = data.times.values
     voltages = data.voltages.values
-    finalTimes = [0]
-
-    # Data Visualization
 
     # Differentiation/AutoCorr Method
-
     # autocorr = numpy.correlate(voltages, voltages, mode='same')
-    # plt.plot(times, autocorr)
-    plt.plot(times, voltages)
+
 
     # diff = numpy.diff(autocorr)/numpy.diff(times);
 
@@ -40,20 +49,16 @@ def peakDetector(ecg_data):
     #    print(diff[k])
     #    if((diff[k] >= -0.0015) and (diff[k] <= 0.0015)):
         # if((diff[k] >= -1) and (diff[k] <= 1)):
-            # finalTimes.append(times[k])
+            # peakTimes.append(times[k])
 
-    # finalTimes.pop(0);
+    # peakTimes.pop(0);
 
-    # print(len(finalTimes))
-    # print(finalTimes)
-    # msToS = 1000
-    # finalTimes[:] = [x / msToS for x in finalTimes]
-    # print(finalTimes)
-    # return finalTimes
+    # Data Visualization
+    # plt.plot(times, autocorr)
+    # plt.plot(times, voltages)
+    # plt.show()
 
     # Threshold Method
-    minvoltage = numpy.min(voltages)
-    maxvoltage = numpy.max(voltages)
     avgvoltage = numpy.average(voltages)
 
     threshvoltage = abs(avgvoltage) * 2
@@ -66,22 +71,19 @@ def peakDetector(ecg_data):
     for i in range(1, len(peaks2) - 1):
        if (voltages[peaks2[i]] >= voltages[peaks2[i - 1]]) and \
                (voltages[peaks2[i]] >= voltages[peaks2[i + 1]]):
-           recentval = finalTimes[len(finalTimes) - 1]
-           finalTimes.append(times[peaks2[i]])
-           if(len(finalTimes)==2):
+           recentval = peakTimes[len(peakTimes) - 1]
+           peakTimes.append(times[peaks2[i]])
+           if(len(peakTimes)==2):
                first_peak = times[peaks2[i]]
-           if(len(finalTimes)==3):
+           if(len(peakTimes)==3):
                second_peak = times[peaks2[i]]
            if(times[peaks2[i]] - recentval <= 0.5*(second_peak-first_peak)):
-               finalTimes.pop()
-    finalTimes.pop(0)
-    print(len(finalTimes))
-    print(finalTimes)
+               peakTimes.pop()
+    peakTimes.pop(0)
+    print(len(peakTimes))
+    print(peakTimes)
 
-    plt.show()
-
-
-    return finalTimes
+    return peakTimes
 
 def instant(time, targetTime):
     """Function that finds the heart rate at an instant time
@@ -280,7 +282,7 @@ def main(
             return brady, tachy
 
     ret_file.close()
-
+    
 
 if __name__ == '__main__':
-    main('test_data/test_data28.csv')
+    main('test_data/test_data5.csv')
