@@ -58,9 +58,9 @@ class hrm_data:
                     peakTimes.pop()
         peakTimes.pop(0)
 
-        self.times = peakTimes
+        self.time = peakTimes
         self.inst = self.instantHr(begin_time)
-        self.avg = self.averageHR(begin_time, end_time)
+        self.avg = self.averageHr(begin_time, end_time)
         self.ano = self.anomalyHr(bradyT, bradyThresh, tachyT, tachyThresh)
 
     def fileChecker(self, filename, names):
