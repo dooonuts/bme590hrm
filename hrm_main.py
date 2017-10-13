@@ -10,7 +10,7 @@ def main(filename,
         inst=False,
         avg=False,
         ano=False):
-    hrm_object = hrm_class(filename)
+    hrm_object = hrm_class.hrm_data(filename)
 
 if __name__ == '__main__':
-    main('test_data/test_data29.csv')
+    main('test_data/test_data1.csv')

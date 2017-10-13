@@ -40,7 +40,7 @@ class hrm_data:
 
         """
 
-        peakTimes = []
+        peakTimes = [0]
 
         # put peak detection here
         names = ["times", "voltages"]
@@ -73,8 +73,7 @@ class hrm_data:
                     first_peak = times[peaks2[i]]
                 if (len(peakTimes) == 3):
                     second_peak = times[peaks2[i]]
-                if (times[peaks2[i]] - recentval <=
-                        0.5 * (second_peak - first_peak)):
+                if (times[peaks2[i]] - recentval <= 0.5 * (second_peak - first_peak)):
                     peakTimes.pop()
         peakTimes.pop(0)
         print(len(peakTimes))
@@ -129,6 +128,9 @@ class hrm_data:
             :rtype: Average heart rate over user specified time
 
         """
+        begin = 0
+        end = 0
+
         for j in range(1, len(self.time)):
             if (self.time[j - 1] / 1000 == begin_time):
                 begin = j - 1
@@ -139,7 +141,7 @@ class hrm_data:
                 end = j - 1
             elif (self.time[j - 1] / 1000 < end_time) and \
                     (self.time[j] / 1000 > end_time):
-                end = 1
+                end = j
         time_count = 0
 
         for k in range(begin + 1, end + 1):
