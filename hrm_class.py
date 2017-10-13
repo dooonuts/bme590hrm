@@ -15,6 +15,9 @@ class hrm_data:
             inst   (int): the last instantaneous hr computed
             avg    (int): the last average hr computed
             ano   (list): list of times the anomalies occurred
+            bradyTimes
+            tachyTimes
+
 
     """
 
@@ -39,7 +42,7 @@ class hrm_data:
 
         """
 
-        peakTimes = [0]
+        peakTimes = []
 
         # put peak detection here
         names = ["times", "voltages"]
@@ -171,9 +174,8 @@ class hrm_data:
         """
         dying_slow = 0
         dying_fast = 0
-        bradyTimes = []
-        tachyTimes = []
-        counter = 0
+        self.bradyTimes = []
+        self.tachyTimes = []
         for l in range(1, len(self.time)):
             if 600000 / (self.time[l] - self.time[l - 1]) < bradyThresh \
                     and dying_slow == 0:
@@ -181,15 +183,15 @@ class hrm_data:
             elif (dying_slow != 0) and \
                     (60000 / (self.time[l] - self.time[l - 1]) > bradyThresh):
                 if self.time[l] - dying_slow > bradyT:
-                    bradyTimes.append(dying_slow / 1000)
+                    self.bradyTimes.append(dying_slow / 1000)
                 dying_slow = 0
             if (60000 / (self.time[l] - self.time[l - 1])) < \
-                    (tachyThresh and dying_fast == 0):
+                    (self.tachyThresh and dying_fast == 0):
                 dying_fast = self.time[l - 1]
             elif (dying_fast != 0) and \
                     (60000 / (self.time[l] - self.time[l - 1]) < tachyThresh):
                 if self.time[l] - dying_fast > tachyT:
-                    tachyTimes.append(dying_fast / 1000)
+                    self.tachyTimes.append(dying_fast / 1000)
                 dying_fast = 0
 
-        self.ano = [bradyTimes, tachyTimes]
+        self.ano = [self.bradyTimes, self.tachyTimes]
