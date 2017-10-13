@@ -18,7 +18,6 @@ class hrm_data:
             bradyTimes
             tachyTimes
 
-
     """
 
     def __init__(
