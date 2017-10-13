@@ -36,13 +36,13 @@ class hrm_data:
 
             :param self: the hrm object
             :param filename: csv file where the ECG data will be stored
-            :param begin_time: time for instHr and 1st time for avg
-            :param end_time: time where the avgHr will end
-            :param bradyT: time brady has to last to be considered brady
-            :param bradyThresh: HR at which below is brady
-            :param tachyT: time tachy has to last to be considered tachy
-            :param tachyThresh: HR at which above is tachy
-            :rtype: heart rate at the specified time
+            :param begin_time: time for instHr and 1st time for avg (ms)
+            :param end_time: time where the avgHr will end (ms)
+            :param bradyT: time brady has to last to be considered brady (ms)
+            :param bradyThresh: HR at which below is brady (beats/min)
+            :param tachyT: time tachy has to last to be considered tachy (ms)
+            :param tachyThresh: HR at which above is tachy (beats/min)
+            :rtype: heart rate at the specified time (beats/min)
 
         """
 
