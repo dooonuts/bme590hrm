@@ -11,7 +11,7 @@ def test_for_average_class():
 
     """
 
-    myHrm = hrm_class.Hrm_data('full_test.csv')
+    myHrm = hrm_class.hrm_data('full_test.csv')
 
     assert round(myHrm.averageHr(), 0) == 78;
 
@@ -25,7 +25,7 @@ def test_outofrange_average_class():
     
     """
 
-    myHrm = hrm_class.Hrm_data('full_test.csv')
+    myHrm = hrm_class.hrm_data('full_test.csv')
 
     # test for start time out of range
     with pytest.raises(ValueError):

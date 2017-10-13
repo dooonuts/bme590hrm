@@ -10,7 +10,7 @@ def test_for_instantaneous_class():
 
     """
 
-    myHrm = hrm_class.Hrm_data('full_test.csv')
+    myHrm = hrm_class.hrm_data('full_test.csv')
 
     assert myHrm.instantHr() == 80
 

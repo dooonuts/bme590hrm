@@ -60,7 +60,6 @@ def peakDetector(ecg_data):
 
     # Threshold Method
     avgvoltage = numpy.average(voltages)
-
     threshvoltage = abs(avgvoltage) * 2
 
     peaks = numpy.where(voltages >= threshvoltage)
@@ -285,4 +284,4 @@ def main(
     
 
 if __name__ == '__main__':
-    main('test_data/test_data5.csv')
+    main('test_data/test_data29.csv')
