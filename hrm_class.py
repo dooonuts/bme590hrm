@@ -45,12 +45,54 @@ class hrm_data:
             :rtype: heart rate at the specified time (beats/min)
 
         """
+        self.file        = filename
+        self.beginTime   = begin_time
+        self.endTime     = end_time
+        self.bradyTime   = bradyT
+        self.bradyThresh = bradyThresh
+        self.tachyTime   = tachyT
+        self.tachyThresh = tachyThresh
+
+        peakTimes = peakDetection()
+
+        self.time = peakTimes
+        self.instantHr(begin_time)
+        self.averageHr(begin_time, end_time)
+        self.anomalyHr(bradyT, bradyThresh, tachyT, tachyThresh)
+
+    def fileChecker(self, filename, names):
+        """Function that checks the file has the right types
+            for ECG_data
+
+            :param self: the hrm object
+            :param filename: csv file that contains the ecg data
+            :param names: header to help pandas work
+            :rtype: Boolean for if there is an error
+
+        """
+
+        try:
+            df = pandas.read_csv(
+                filename, header=None, names=names, converters={
+                    "times": float, "voltages": float})
+            errBool = False
+            return errBool
+        except ValueError:
+            errBool = True
+            return errBool
+
+    def peakDetection(self):
+        """Function that finds all the peaks in an ecg and returns them
+
+            :param self: the hrm object
+            :rtype: list of peaks 
+        """
 
         peakTimes = [0]
 
         # put peak detection here
         names = ["times", "voltages"]
-        dataerror = self.fileChecker(filename, names)
+        dataerror = self.fileChecker(self.file, names)
         if (dataerror):
             print("Non-Numeric Value Entered")
         else:
@@ -85,33 +127,10 @@ class hrm_data:
         print(len(peakTimes))
         print(peakTimes)
 
-        self.time = peakTimes
-        self.inst = self.instantHr(begin_time)
-        self.avg = self.averageHr(begin_time, end_time)
-        self.ano = self.anomalyHr(bradyT, bradyThresh, tachyT, tachyThresh)
+        return peakTimes
 
-    def fileChecker(self, filename, names):
-        """Function that checks the file has the right types
-            for ECG_data
 
-            :param self: the hrm object
-            :param filename: csv file that contains the ecg data
-            :param names: header to help pandas work
-            :rtype: Boolean for if there is an error
-
-        """
-
-        try:
-            df = pandas.read_csv(
-                filename, header=None, names=names, converters={
-                    "times": float, "voltages": float})
-            errBool = False
-            return errBool
-        except ValueError:
-            errBool = True
-            return errBool
-
-    def instantHr(self, target_time=0):
+    def instantHr(self, target_time = 0):
         """Function that finds the heart rate at an instant time
 
             Finds the peak that corresponds to given time, if there
