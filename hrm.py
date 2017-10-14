@@ -1,6 +1,6 @@
 # HRM
 
-import pytest
+
 import numpy
 import pandas
 import scipy.signal

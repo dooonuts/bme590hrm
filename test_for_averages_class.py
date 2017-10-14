@@ -35,7 +35,7 @@ def test_outofrange_average_class():
     with pytest.raises(ValueError):
         myHrm.averageHr(0, 250)
 
-    #test for start time after end time
+    # test for start time after end time
     with pytest.raises(ValueError):
         myHrm.averageHr(300, 250)
 
