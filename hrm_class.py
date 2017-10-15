@@ -1,6 +1,11 @@
 import numpy
 import pandas
 
+global convert_input_time_to_seconds = 1000
+""" This global variable is used to convert input timescale into seconds. Base value of 1000 assumes milliseconds, where time (ms) / convert_input_time_to_seconds = time (s)
+    Adjust variable as necessary to ensure time in seconds
+"""
+
 class HrmData:
     """This is a HRM class
 
@@ -189,15 +194,15 @@ class HrmData:
         end = 0
 
         for j in range(1, len(self.time)):
-            if (self.time[j - 1] / 1000 == begin_time):
+            if (self.time[j - 1] / convert_input_time_to_seconds == begin_time):
                 begin = j - 1
-            elif (self.time[j - 1] / 1000 < begin_time) and \
-                    (self.time[j] / 1000 > begin_time):
+            elif (self.time[j - 1] / convert_input_time_to_seconds < begin_time) and \
+                    (self.time[j] / convert_input_time_to_seconds > begin_time):
                 begin = j
-            if (self.time[j - 1] / 1000 == end_time):
+            if (self.time[j - 1] / convert_input_time_to_seconds == end_time):
                 end = j - 1
-            elif (self.time[j - 1] / 1000 < end_time) and \
-                    (self.time[j] / 1000 > end_time):
+            elif (self.time[j - 1] / convert_input_time_to_seconds < end_time) and \
+                    (self.time[j] / convert_input_time_to_seconds > end_time):
                 end = j
         time_count = 0
 
@@ -246,19 +251,19 @@ class HrmData:
         self.brady_times = []
         self.tachy_times = []
         for l in range(1, len(self.time)):
-            if 600000 / (self.time[l] - self.time[l - 1]) < brady_thresh \
+            if 60*convert_input_time_to_seconds / (self.time[l] - self.time[l - 1]) < brady_thresh \
                     and dying_slow == 0:
                 dying_slow = self.time[l - 1]
             elif (dying_slow != 0) and \
-                    (60000 / (self.time[l] - self.time[l - 1]) > brady_thresh):
+                    (60 * convert_input_time_to_seconds / (self.time[l] - self.time[l - 1]) > brady_thresh):
                 if self.time[l] - dying_slow > brady_time:
                     self.brady_times.append(dying_slow / 1000)
                 dying_slow = 0
-            if (60000 / (self.time[l] - self.time[l - 1])) < \
+            if (60 * convert_input_time_to_seconds / (self.time[l] - self.time[l - 1])) < \
                     (self.tachy_thresh and dying_fast == 0):
                 dying_fast = self.time[l - 1]
             elif (dying_fast != 0) and \
-                    (60000 / (self.time[l] - self.time[l - 1]) < tachy_thresh):
+                    (60*convert_input_time_to_seconds / (self.time[l] - self.time[l - 1]) < tachy_thresh):
                 if self.time[l] - dying_fast > tachy_time:
                     self.tachy_times.append(dying_fast / 1000)
                 dying_fast = 0
