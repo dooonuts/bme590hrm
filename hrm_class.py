@@ -10,24 +10,24 @@ class HrmData:
        anomalyHr determines if there is brady/tachy and where they occurred
 
        Attributes:
-            times (list): list of times that a peak occurs
-            inst   (int): the last instantaneous hr computed
-            avg    (int): the last average hr computed
-            ano   (list): list of times the anomalies occurred
-            bradyTimes
-            tachyTimes
+            times             (list): list of times that a peak occurs
+            instantaneous_hr   (int): the last instantaneous hr computed
+            average_hr         (int): the last average hr computed
+            anomaly_hr        (list): list of times the anomalies occurred
+            brady_times       (list): times in which brady occurred
+            tachy_times       (list): times in which tachy occurred
 
     """
 
     def __init__(
             self,
             filename,
-            begin_time=0,
-            end_time=10,
-            brady_time=5,
-            brady_thresh=60,
-            tachy_time=5,
-            tachy_thresh=100):
+            begin_time   = 0,
+            end_time     = 10,
+            brady_time   = 5,
+            brady_thresh = 60,
+            tachy_time   = 5,
+            tachy_thresh = 100):
         """Function that initializes values for the whole function
 
             Finds the peak that corresponds to given time, if there
@@ -36,12 +36,12 @@ class HrmData:
 
             :param self: the hrm object
             :param filename: csv file where the ECG data will be stored
-            :param begin_time: time for instHr and 1st time for avg (ms)
-            :param end_time: time where the avgHr will end (ms)
-            :param bradyT: time brady has to last to be considered brady (ms)
-            :param bradyThresh: HR at which below is brady (beats/min)
-            :param tachyT: time tachy has to last to be considered tachy (ms)
-            :param tachyThresh: HR at which above is tachy (beats/min)
+            :param begin_time (ms): time for instHr and 1st time for avg
+            :param end_time (ms): time where the avgHr will end
+            :param brady_time (sec): time brady has to last to be considered brady
+            :param brady_thresh (bpm): HR at which below is brady
+            :param tachy_time (sec): time tachy has to last to be considered tachy
+            :param tachy_thresh (bpm): HR at which above is tachy
             :rtype: heart rate at the specified time (beats/min)
 
         """
@@ -85,7 +85,7 @@ class HrmData:
         """Function that finds all the peaks in an ecg and returns them
 
             :param self: the hrm object
-            :rtype: list of peaks 
+            :rtype: list of peaks (ms)
         """
 
         peak_times = [0]
@@ -115,7 +115,7 @@ class HrmData:
         for i in range(1, len(peaks2) - 1):
             if (voltages[peaks2[i]] >= voltages[peaks2[i - 1]]) and \
                     (voltages[peaks2[i]] >= voltages[peaks2[i + 1]]):
-                recent_val = peak_times[len(peakTimes) - 1]
+                recent_val = peak_times[len(peak_times) - 1]
                 peak_times.append(times[peaks2[i]])
                 if (len(peak_times) == 2):
                     first_peak = times[peaks2[i]]
@@ -129,7 +129,18 @@ class HrmData:
 
         return peak_times
 
+    @property
+    def find_instant_hr(self):
+        """Property of the hrm class
 
+            :param self: the hrm object
+            :rtype: the instantaneous heartrate (beats/min)
+
+        """
+
+        return self.instantaneous_hr 
+
+    @instantaneous_hr.setter
     def find_instant_hr(self, target_time = 0):
         """Function that finds the heart rate at an instant time
 
@@ -138,8 +149,8 @@ class HrmData:
             the given time
 
             :param self: the hrm object
-            :param targetTime: time specified by the user
-            :rtype: heart rate at the specified time
+            :param targetTime (ms): time specified by the user
+            :rtype: heart rate at the specified time (beats/min)
 
         """
         for x in range(0, len(self.time)):
@@ -148,8 +159,19 @@ class HrmData:
                 break
 
         inst = (60 / instant_dt) * 100
-        self.instantaneousHr = inst
+        self.instantaneous_hr = inst
 
+    @property
+    def find_average_hr(self):
+        """Property of the hrm class
+
+            :param self: the hrm object
+            :rtype: the average heart rate (beats/min)
+
+        """
+        return self.average_hr
+
+    @average_hr.setter    
     def find_average_hr(self, begin_time=0, end_time=10):
         """Function that finds the average heart rate over a user specified time
 
@@ -158,9 +180,9 @@ class HrmData:
             the user specified time
 
             :param self: the hrm object
-            :param begin_time: The user specified time at which the avg starts
-            :param end_time: User specified time at which the avg ends
-            :rtype: Average heart rate over user specified time
+            :param begin_time (ms): The user specified time at which the avg starts
+            :param end_time (ms): User specified time at which the avg ends 
+            :rtype: Average heart rate over user specified time (beats/min)
 
         """
         begin = 0
@@ -186,46 +208,59 @@ class HrmData:
 
         time_avg = time_count / div
         avg = 60 / time_avg
-        self.averageHr = avg
+        self.average_hr = avg
 
-    def find_anomaly_hr(self, bradyT=5, bradyThresh=60, tachyT=5, tachyThresh=100):
+
+    @property
+    def find_anomaly_hr(self):
+        """Property of the hrm class
+
+            :param self: the hrm object
+            :rtype: list of times for bradycardia and tachycardia
+
+        """
+        return [self.brady_times, self.tachy_times]
+
+
+    @anomaly_hr.setter
+    def find_anomaly_hr(self, brady_time=5, brady_thresh=60, tachy_time=5, tachy_thresh=100):
         """Function for finding if there is bradycardia or tachycardia
 
             The parameters are all configurable.
 
             :param self: the hrm object
             :param brady_thresh (bpm): The threshold for bradycardia, if a
-                heart rate is below this, it is considered bradycardia
-            :param brady_time: the length of time the low heart rate has
-                to last in order to be considered bradycardia
+                heart rate is below this, it is considered bradycardia 
+            :param brady_time (ms): the length of time the low heart rate has
+                to last in order to be considered bradycardia 
             :param tachy_thresh (bpm): The threshold for tachycardia, if a
-                heart rate is above this, it is considered tachycardia
-            :param tachy_time: the length of time the high heart rate has
+                heart rate is above this, it is considered tachycardia 
+            :param tachy_time (ms): the length of time the high heart rate has
                 to last in order to be considered tachycardia
             :rtype: two lists which hold the when bradycardias first occured
-                and when tahcycardias first occured
+                and when tahcycardias first occured (sec)
 
         """
         dying_slow = 0
         dying_fast = 0
-        self.bradyTimes = []
-        self.tachyTimes = []
+        self.brady_times = []
+        self.tachy_times = []
         for l in range(1, len(self.time)):
-            if 600000 / (self.time[l] - self.time[l - 1]) < bradyThresh \
+            if 600000 / (self.time[l] - self.time[l - 1]) < brady_thresh \
                     and dying_slow == 0:
                 dying_slow = self.time[l - 1]
             elif (dying_slow != 0) and \
-                    (60000 / (self.time[l] - self.time[l - 1]) > bradyThresh):
-                if self.time[l] - dying_slow > bradyT:
-                    self.bradyTimes.append(dying_slow / 1000)
+                    (60000 / (self.time[l] - self.time[l - 1]) > brady_thresh):
+                if self.time[l] - dying_slow > brady_time:
+                    self.brady_times.append(dying_slow / 1000)
                 dying_slow = 0
             if (60000 / (self.time[l] - self.time[l - 1])) < \
-                    (self.tachyThresh and dying_fast == 0):
+                    (self.tachy_thresh and dying_fast == 0):
                 dying_fast = self.time[l - 1]
             elif (dying_fast != 0) and \
-                    (60000 / (self.time[l] - self.time[l - 1]) < tachyThresh):
-                if self.time[l] - dying_fast > tachyT:
-                    self.tachyTimes.append(dying_fast / 1000)
+                    (60000 / (self.time[l] - self.time[l - 1]) < tachy_thresh):
+                if self.time[l] - dying_fast > tachy_time:
+                    self.tachy_times.append(dying_fast / 1000)
                 dying_fast = 0
 
-        self.anomalyHr = [self.bradyTimes, self.tachyTimes]
+        self.anomaly_hr = [self.brady_times, self.tachy_times]
