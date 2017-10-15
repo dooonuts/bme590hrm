@@ -1,7 +1,7 @@
 import numpy
 import pandas
 
-class hrm_data:
+class HrmData:
     """This is a HRM class
 
        __init__ finds the peaks and sets the initial parameters
@@ -24,10 +24,10 @@ class hrm_data:
             filename,
             begin_time=0,
             end_time=10,
-            bradyT=5,
-            bradyThresh=60,
-            tachyT=5,
-            tachyThresh=100):
+            brady_time=5,
+            brady_thresh=60,
+            tachy_time=5,
+            tachy_thresh=100):
         """Function that initializes values for the whole function
 
             Finds the peak that corresponds to given time, if there
@@ -45,22 +45,22 @@ class hrm_data:
             :rtype: heart rate at the specified time (beats/min)
 
         """
-        self.file        = filename
-        self.beginTime   = begin_time
-        self.endTime     = end_time
-        self.bradyTime   = bradyT
-        self.bradyThresh = bradyThresh
-        self.tachyTime   = tachyT
-        self.tachyThresh = tachyThresh
+        self.file         = filename
+        self.begin_time   = begin_time
+        self.end_time     = end_time
+        self.brady_time   = brady_time
+        self.brady_thresh = brady_thresh
+        self.tachy_time   = tachy_time
+        self.tachy_thresh = tachy_thresh
 
-        peakTimes = peakDetection()
+        peak_times = peak_detection()
 
-        self.time = peakTimes
-        self.instantHr(begin_time)
-        self.averageHr(begin_time, end_time)
-        self.anomalyHr(bradyT, bradyThresh, tachyT, tachyThresh)
+        self.time = peak_times
+        self.find_instant_hr(begin_time)
+        self.find_average_hr(begin_time, end_time)
+        self.find_anomaly_hr(brady_time, brady_thresh, tachy_time, tachy_thresh)
 
-    def fileChecker(self, filename, names):
+    def file_checker(self, filename, names):
         """Function that checks the file has the right types
             for ECG_data
 
@@ -73,41 +73,41 @@ class hrm_data:
 
         try:
             df = pandas.read_csv(
-                filename, header=None, names=names, converters={
+                filename, header = None, names = names, converters = {
                     "times": float, "voltages": float})
-            errBool = False
-            return errBool
+            err_Bool = False
+            return err_Bool
         except ValueError:
-            errBool = True
-            return errBool
+            err_Bool = True
+            return err_Bool
 
-    def peakDetection(self):
+    def peak_detection(self):
         """Function that finds all the peaks in an ecg and returns them
 
             :param self: the hrm object
             :rtype: list of peaks 
         """
 
-        peakTimes = [0]
+        peak_times = [0]
 
         # put peak detection here
         names = ["times", "voltages"]
-        dataerror = self.fileChecker(self.file, names)
-        if (dataerror):
+        data_error = self.file_checker(self.file, names)
+        if (data_error):
             print("Non-Numeric Value Entered")
         else:
             ecg_data = pandas.read_csv(
-                filename, header=None, names=names, converters={
+                filename, header = None, names = names, converters = {
                     "times": float, "voltages": float})
 
         times = ecg_data.times.values
         voltages = ecg_data.voltages.values
 
         # Create Threshold
-        avgvoltage = numpy.average(voltages)
-        threshvoltage = abs(avgvoltage) * 2
+        avg_voltage = numpy.average(voltages)
+        thresh_voltage = abs(avg_voltage) * 2
 
-        peaks = numpy.where(voltages >= threshvoltage)
+        peaks = numpy.where(voltages >= thresh_voltage)
         peaks1 = peaks[0]
         peaks2 = peaks1.tolist()
         first_peak = 0.0
@@ -115,22 +115,22 @@ class hrm_data:
         for i in range(1, len(peaks2) - 1):
             if (voltages[peaks2[i]] >= voltages[peaks2[i - 1]]) and \
                     (voltages[peaks2[i]] >= voltages[peaks2[i + 1]]):
-                recentval = peakTimes[len(peakTimes) - 1]
-                peakTimes.append(times[peaks2[i]])
-                if (len(peakTimes) == 2):
+                recent_val = peak_times[len(peakTimes) - 1]
+                peak_times.append(times[peaks2[i]])
+                if (len(peak_times) == 2):
                     first_peak = times[peaks2[i]]
-                if (len(peakTimes) == 3):
+                if (len(peak_times) == 3):
                     second_peak = times[peaks2[i]]
-                if (times[peaks2[i]] - recentval <= 0.5 * (second_peak - first_peak)):
-                    peakTimes.pop()
-        peakTimes.pop(0)
-        print(len(peakTimes))
-        print(peakTimes)
+                if (times[peaks2[i]] - recent_val <= 0.5 * (second_peak - first_peak)):
+                    peak_times.pop()
+        peak_times.pop(0)
+        print(len(peak_times))
+        print(peak_times)
 
-        return peakTimes
+        return peak_times
 
 
-    def instantHr(self, target_time = 0):
+    def find_instant_hr(self, target_time = 0):
         """Function that finds the heart rate at an instant time
 
             Finds the peak that corresponds to given time, if there
@@ -148,9 +148,9 @@ class hrm_data:
                 break
 
         inst = (60 / instant_dt) * 100
-        self.inst = inst
+        self.instantaneousHr = inst
 
-    def averageHr(self, begin_time=0, end_time=10):
+    def find_average_hr(self, begin_time=0, end_time=10):
         """Function that finds the average heart rate over a user specified time
 
             Like the instant function,
@@ -186,9 +186,9 @@ class hrm_data:
 
         time_avg = time_count / div
         avg = 60 / time_avg
-        self.avg = avg
+        self.averageHr = avg
 
-    def anomalyHr(self, bradyT=5, bradyThresh=60, tachyT=5, tachyThresh=100):
+    def find_anomaly_hr(self, bradyT=5, bradyThresh=60, tachyT=5, tachyThresh=100):
         """Function for finding if there is bradycardia or tachycardia
 
             The parameters are all configurable.
@@ -228,4 +228,4 @@ class hrm_data:
                     self.tachyTimes.append(dying_fast / 1000)
                 dying_fast = 0
 
-        self.ano = [self.bradyTimes, self.tachyTimes]
+        self.anomalyHr = [self.bradyTimes, self.tachyTimes]
