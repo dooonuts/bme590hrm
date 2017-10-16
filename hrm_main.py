@@ -10,7 +10,8 @@ def main(filename,
         inst=False,
         avg=False,
         ano=False):
-    hrm_object = hrm_class.hrm_data(filename)
+    hrm_object = hrm_class.HrmData(filename);
+    print(hrm_object.average_hr);
 
 if __name__ == '__main__':
-    main('test_data/test_data1.csv')
+    main('test_data/test_data2.csv')

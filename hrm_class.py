@@ -1,10 +1,11 @@
 import numpy
 import pandas
 
-global convert_input_time_to_seconds = 1000
+convert_input_time_to_seconds = 1000
 """ This global variable is used to convert input timescale into seconds. Base value of 1000 assumes milliseconds, where time (ms) / convert_input_time_to_seconds = time (s)
     Adjust variable as necessary to ensure time in seconds
 """
+
 
 class HrmData:
     """This is a HRM class
@@ -27,12 +28,12 @@ class HrmData:
     def __init__(
             self,
             filename,
-            begin_time   = 0,
-            end_time     = 10,
-            brady_time   = 5,
-            brady_thresh = 60,
-            tachy_time   = 5,
-            tachy_thresh = 100):
+            begin_time=0,
+            end_time=10,
+            brady_time=5,
+            brady_thresh=60,
+            tachy_time=5,
+            tachy_thresh=100):
         """Function that initializes values for the whole function
 
             Finds the peak that corresponds to given time, if there
@@ -50,20 +51,24 @@ class HrmData:
             :rtype: heart rate at the specified time (beats/min)
 
         """
-        self.file         = filename
-        self.begin_time   = begin_time
-        self.end_time     = end_time
-        self.brady_time   = brady_time
+        self.file = filename
+        self.begin_time = begin_time
+        self.end_time = end_time
+        self.brady_time = brady_time
         self.brady_thresh = brady_thresh
-        self.tachy_time   = tachy_time
+        self.tachy_time = tachy_time
         self.tachy_thresh = tachy_thresh
 
-        peak_times = peak_detection()
+        peak_times = self.peak_detection()
 
         self.time = peak_times
         self.find_instant_hr(begin_time)
         self.find_average_hr(begin_time, end_time)
-        self.find_anomaly_hr(brady_time, brady_thresh, tachy_time, tachy_thresh)
+        self.find_anomaly_hr(
+            brady_time,
+            brady_thresh,
+            tachy_time,
+            tachy_thresh)
 
     def file_checker(self, filename, names):
         """Function that checks the file has the right types
@@ -78,7 +83,7 @@ class HrmData:
 
         try:
             df = pandas.read_csv(
-                filename, header = None, names = names, converters = {
+                filename, header=None, names=names, converters={
                     "times": float, "voltages": float})
             err_Bool = False
             return err_Bool
@@ -102,9 +107,8 @@ class HrmData:
             print("Non-Numeric Value Entered")
         else:
             ecg_data = pandas.read_csv(
-                filename, header = None, names = names, converters = {
+                self.file, header=None, names=names, converters={
                     "times": float, "voltages": float})
-
         times = ecg_data.times.values
         voltages = ecg_data.voltages.values
 
@@ -126,7 +130,8 @@ class HrmData:
                     first_peak = times[peaks2[i]]
                 if (len(peak_times) == 3):
                     second_peak = times[peaks2[i]]
-                if (times[peaks2[i]] - recent_val <= 0.5 * (second_peak - first_peak)):
+                if (times[peaks2[i]] - recent_val <=
+                        0.5 * (second_peak - first_peak)):
                     peak_times.pop()
         peak_times.pop(0)
         print(len(peak_times))
@@ -143,10 +148,10 @@ class HrmData:
 
         """
 
-        return self.instantaneous_hr 
+        return self.instantaneous_hr
 
-    @instantaneous_hr.setter
-    def find_instant_hr(self, target_time = 0):
+    # @instantaneous_hr.setter
+    def find_instant_hr(self, target_time=0):
         """Function that finds the heart rate at an instant time
 
             Finds the peak that corresponds to given time, if there
@@ -176,7 +181,7 @@ class HrmData:
         """
         return self.average_hr
 
-    @average_hr.setter    
+    # @average_hr.setter
     def find_average_hr(self, begin_time=0, end_time=10):
         """Function that finds the average heart rate over a user specified time
 
@@ -186,15 +191,16 @@ class HrmData:
 
             :param self: the hrm object
             :param begin_time (ms): The user specified time at which the avg starts
-            :param end_time (ms): User specified time at which the avg ends 
+            :param end_time (ms): User specified time at which the avg ends
             :rtype: Average heart rate over user specified time (beats/min)
 
         """
         begin = 0
-        end = 0
+        end = 1
 
         for j in range(1, len(self.time)):
-            if (self.time[j - 1] / convert_input_time_to_seconds == begin_time):
+            if (self.time[j - 1] /
+                    convert_input_time_to_seconds == begin_time):
                 begin = j - 1
             elif (self.time[j - 1] / convert_input_time_to_seconds < begin_time) and \
                     (self.time[j] / convert_input_time_to_seconds > begin_time):
@@ -215,7 +221,6 @@ class HrmData:
         avg = 60 / time_avg
         self.average_hr = avg
 
-
     @property
     def find_anomaly_hr(self):
         """Property of the hrm class
@@ -226,20 +231,24 @@ class HrmData:
         """
         return [self.brady_times, self.tachy_times]
 
-
-    @anomaly_hr.setter
-    def find_anomaly_hr(self, brady_time=5, brady_thresh=60, tachy_time=5, tachy_thresh=100):
+    # @anomaly_hr.setter
+    def find_anomaly_hr(
+            self,
+            brady_time=5,
+            brady_thresh=60,
+            tachy_time=5,
+            tachy_thresh=100):
         """Function for finding if there is bradycardia or tachycardia
 
             The parameters are all configurable.
 
             :param self: the hrm object
             :param brady_thresh (bpm): The threshold for bradycardia, if a
-                heart rate is below this, it is considered bradycardia 
+                heart rate is below this, it is considered bradycardia
             :param brady_time (ms): the length of time the low heart rate has
-                to last in order to be considered bradycardia 
+                to last in order to be considered bradycardia
             :param tachy_thresh (bpm): The threshold for tachycardia, if a
-                heart rate is above this, it is considered tachycardia 
+                heart rate is above this, it is considered tachycardia
             :param tachy_time (ms): the length of time the high heart rate has
                 to last in order to be considered tachycardia
             :rtype: two lists which hold the when bradycardias first occured
@@ -251,19 +260,22 @@ class HrmData:
         self.brady_times = []
         self.tachy_times = []
         for l in range(1, len(self.time)):
-            if 60*convert_input_time_to_seconds / (self.time[l] - self.time[l - 1]) < brady_thresh \
-                    and dying_slow == 0:
+            if 60 * convert_input_time_to_seconds / \
+                    (self.time[l] - self.time[l - 1]) < brady_thresh and dying_slow == 0:
                 dying_slow = self.time[l - 1]
             elif (dying_slow != 0) and \
                     (60 * convert_input_time_to_seconds / (self.time[l] - self.time[l - 1]) > brady_thresh):
                 if self.time[l] - dying_slow > brady_time:
                     self.brady_times.append(dying_slow / 1000)
                 dying_slow = 0
-            if (60 * convert_input_time_to_seconds / (self.time[l] - self.time[l - 1])) < \
-                    (self.tachy_thresh and dying_fast == 0):
+            if (60 *
+                convert_input_time_to_seconds /
+                (self.time[l] -
+                 self.time[l -
+                           1])) < (self.tachy_thresh and dying_fast == 0):
                 dying_fast = self.time[l - 1]
             elif (dying_fast != 0) and \
-                    (60*convert_input_time_to_seconds / (self.time[l] - self.time[l - 1]) < tachy_thresh):
+                    (60 * convert_input_time_to_seconds / (self.time[l] - self.time[l - 1]) < tachy_thresh):
                 if self.time[l] - dying_fast > tachy_time:
                     self.tachy_times.append(dying_fast / 1000)
                 dying_fast = 0
