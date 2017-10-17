@@ -91,8 +91,13 @@ class HrmData:
             err_Bool = True
             return err_Bool
 
-    def threshold(self):
-        
+    def threshold(self, voltages, avg_voltage):
+        thresh_voltage = abs(avg_voltage) * 2
+        peaks = numpy.where(voltages >= thresh_voltage)
+        peaks1 = peaks[0]
+        peaks2 = peaks1.tolist()
+
+        return peaks2
 
     def peak_detection(self):
         """Function that finds all the peaks in an ecg and returns them
@@ -117,23 +122,20 @@ class HrmData:
 
         # Create Threshold
         avg_voltage = numpy.average(voltages)
-        thresh_voltage = abs(avg_voltage) * 2
+        peaks = self.threshold(voltages, avg_voltage)
 
-        peaks = numpy.where(voltages >= thresh_voltage)
-        peaks1 = peaks[0]
-        peaks2 = peaks1.tolist()
         first_peak = 0.0
         second_peak = 0.0
-        for i in range(1, len(peaks2) - 1):
-            if (voltages[peaks2[i]] >= voltages[peaks2[i - 1]]) and \
-                    (voltages[peaks2[i]] >= voltages[peaks2[i + 1]]):
+        for i in range(1, len(peaks) - 1):
+            if (voltages[peaks[i]] >= voltages[peaks[i - 1]]) and \
+                    (voltages[peaks[i]] >= voltages[peaks[i + 1]]):
                 recent_val = peak_times[len(peak_times) - 1]
-                peak_times.append(times[peaks2[i]])
+                peak_times.append(times[peaks[i]])
                 if (len(peak_times) == 2):
-                    first_peak = times[peaks2[i]]
+                    first_peak = times[peaks[i]]
                 if (len(peak_times) == 3):
-                    second_peak = times[peaks2[i]]
-                if (times[peaks2[i]] - recent_val <=
+                    second_peak = times[peaks[i]]
+                if (times[peaks[i]] - recent_val <=
                         0.5 * (second_peak - first_peak)):
                     peak_times.pop()
         peak_times.pop(0)
