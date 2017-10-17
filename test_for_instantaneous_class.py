@@ -12,7 +12,7 @@ def test_for_instantaneous_class():
 
     myHrm = hrm_class.HrmData('test_data/test_data2.csv')
 
-    assert myHrm.find_instant_hr() == 80
+    assert myHrm.find_instant_hr() == 69
 
     with pytest.raises(ValueError):
-        myHrm.find_instant_hr(250)
+        myHrm.find_instant_hr(30)

@@ -23,7 +23,8 @@ class HrmData:
             anomaly_hr        (list): list of times the anomalies occurred
             brady_times       (list): times in which brady occurred
             tachy_times       (list): times in which tachy occurred
-            units              (int): the data is given in ms or sec
+            units              (int): the data is given in ms or sec for ms put 1000
+                                        for sec put 1
 
     """
 
@@ -51,7 +52,7 @@ class HrmData:
             :param brady_thresh (bpm): HR at which below is brady
             :param tachy_time (sec): time tachy has to last to be considered tachy
             :param tachy_thresh (bpm): HR at which above is tachy
-            :param units (int): the data is given in ms or sec
+            :param units (int): the data is given in ms or sec, put 1000 for ms and 1 for sec 
             :rtype: heart rate at the specified time (beats/min)
 
         """
