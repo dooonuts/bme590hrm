@@ -6,16 +6,17 @@ import pandas
 import scipy.signal
 import matplotlib.pyplot as plt
 
-def fileChecker(ecg_data, names):
+def file_checker(ecg_data_file, names):
     try:
-        df = pandas.read_csv(ecg_data, header=None, names=names, converters={"times":float,"voltages":float})
-        errBool = False
-        return errBool
+        df = pandas.read_csv(ecg_data_file, header = None, names = names, \
+                converters = {"times" : float, "voltages" : float})
+        err_Bool = False
+        return err_Bool
     except ValueError:
-        errBool = True
-        return errBool
+        err_Bool = True
+        return err_Bool
 
-def peakDetector(ecg_data):
+def peak_detector(ecg_data_file):
     """Function to find all of the peaks in the csv
 
         The peaks will be used to find heart rate
@@ -23,18 +24,19 @@ def peakDetector(ecg_data):
         :param ecg_data: the initial csv file given
         :rtype: list of times where a peak occured
     """
-    peakTimes=[0]
+    peak_times=[0]
 
     names = ["times","voltages"]
-    dataerror = False
-    dataerror = fileChecker(ecg_data, names)
-    if (dataerror == True):
+    data_error = False
+    data_error = file_checker(ecg_data_file, names)
+    if (data_error == True):
         print("Non-Numeric Value Entered")
-        return peakTimes
+        return peak_times
 
-    data = pandas.read_csv(ecg_data, header=None, names=names, converters={"times":float, "voltages":float})
-    times = data.times.values
-    voltages = data.voltages.values
+    ecg_data = pandas.read_csv(ecg_data_file, header = None, names = names, \
+            converters = {"times" : float, "voltages": float})
+    times = ecg_data.times.values
+    voltages = ecg_data.voltages.values
 
     # Differentiation/AutoCorr Method
     # autocorr = numpy.correlate(voltages, voltages, mode='same')
@@ -59,10 +61,10 @@ def peakDetector(ecg_data):
     # plt.show()
 
     # Threshold Method
-    avgvoltage = numpy.average(voltages)
-    threshvoltage = abs(avgvoltage) * 2
+    avg_voltage = numpy.average(voltages)
+    thresh_voltage = abs(avg_voltage) * 2
 
-    peaks = numpy.where(voltages >= threshvoltage)
+    peaks = numpy.where(voltages >= thresh_voltage)
     peaks1 = peaks[0]
     peaks2 = peaks1.tolist()
     first_peak = 0.0;
@@ -70,21 +72,21 @@ def peakDetector(ecg_data):
     for i in range(1, len(peaks2) - 1):
        if (voltages[peaks2[i]] >= voltages[peaks2[i - 1]]) and \
                (voltages[peaks2[i]] >= voltages[peaks2[i + 1]]):
-           recentval = peakTimes[len(peakTimes) - 1]
-           peakTimes.append(times[peaks2[i]])
-           if(len(peakTimes)==2):
+           recent_val = peak_times[len(peak_times) - 1]
+           peak_times.append(times[peaks2[i]])
+           if(len(peak_times)==2):
                first_peak = times[peaks2[i]]
-           if(len(peakTimes)==3):
+           if(len(peak_times)==3):
                second_peak = times[peaks2[i]]
-           if(times[peaks2[i]] - recentval <= 0.5*(second_peak-first_peak)):
-               peakTimes.pop()
-    peakTimes.pop(0)
-    print(len(peakTimes))
-    print(peakTimes)
+           if(times[peaks2[i]] - recent_val <= 0.5*(second_peak-first_peak)):
+               peak_times.pop()
+    peak_times.pop(0)
+    print(len(peak_times))
+    print(peak_times)
 
-    return peakTimes
+    return peak_times
 
-def instant(time, targetTime):
+def instant(time, target_time):
     """Function that finds the heart rate at an instant time
 
         Finds the peak that corresponds to given time, if there
@@ -99,11 +101,11 @@ def instant(time, targetTime):
         the two peaks
     """
 
-    if targetTime > time[len(time) - 1]:
+    if target_time > time[len(time) - 1]:
         raise ValueError('target time is out of range of detected peaks')
 
     for x in range(0, len(time)):
-        if time[x] >= targetTime:
+        if time[x] >= target_time:
             if x + 1 >= len(time):
                 raise ValueError(
                     'Target time is out of range of detected peaks')
@@ -206,7 +208,7 @@ def anomaly(time, brady_thresh, brady_time, tachy_thresh, tachy_time):
 
 
 def main(
-        ecg_data,
+        ecg_data_file,
         user_specified_time1=0,
         user_specified_time2=30,
         brady_threshold=50,
@@ -243,7 +245,7 @@ def main(
             returns the heart rate. Also writes to a file
 
     """
-    peak_time = peakDetector(ecg_data)
+    peak_time = peak_detector(ecg_data_file)
     ret_file = open("testfile.txt", "w")
 
     if inst:
