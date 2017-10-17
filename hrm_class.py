@@ -1,7 +1,8 @@
 import numpy
 import pandas
 
-convert_input_time_to_seconds = 1000
+CONVERT_INPUT_TIME_TO_SECONDS = 1
+
 """ This global variable is used to convert input timescale into seconds. Base value of 1000 assumes milliseconds, where time (ms) / convert_input_time_to_seconds = time (s)
     Adjust variable as necessary to ensure time in seconds
 """
@@ -115,9 +116,12 @@ class HrmData:
             :rtype: list of peaks (ms)
         """
 
+        # Initialized with zero so that it could iterate through the array properly
+        # It was the greatest solution to this challenging dilemna
         peak_times = [0]
+        times = numpy.empty
+        voltages = numpy.empty
 
-        # put peak detection here
         names = ["times", "voltages"]
         data_error = self.file_checker(self.file, names)
         if (data_error):
@@ -126,8 +130,9 @@ class HrmData:
             ecg_data = pandas.read_csv(
                 self.file, header=None, names=names, converters={
                     "times": float, "voltages": float})
-        times = ecg_data.times.values
-        voltages = ecg_data.voltages.values
+            times = ecg_data.times.values
+            voltages = ecg_data.voltages.values
+
 
         # Create Threshold
         avg_voltage = numpy.average(voltages)
@@ -182,7 +187,7 @@ class HrmData:
         
         for x in range(0, len(self.time)):
             if self.time[x] > target_time:
-                if x + 1 >= len(time):
+                if x + 1 >= len(self.time):
                     raise ValueError(
                         'Target time is out of range of detected peaks')
                 instant_dt = self.time[x + 1] - self.time[x]
@@ -228,15 +233,15 @@ class HrmData:
         # Start at index 1 because checking the j-1 index (to get the 0 pos)
         for j in range(1, len(self.time)):
             if (self.time[j - 1] /
-                    convert_input_time_to_seconds == begin_time):
+                    CONVERT_INPUT_TIME_TO_SECONDS == begin_time):
                 begin = j - 1
-            elif (self.time[j - 1] / convert_input_time_to_seconds < begin_time) and \
-                    (self.time[j] / convert_input_time_to_seconds > begin_time):
+            elif (self.time[j - 1] / CONVERT_INPUT_TIME_TO_SECONDS < begin_time) and \
+                    (self.time[j] / CONVERT_INPUT_TIME_TO_SECONDS > begin_time):
                 begin = j
-            if (self.time[j - 1] / convert_input_time_to_seconds == end_time):
+            if (self.time[j - 1] / CONVERT_INPUT_TIME_TO_SECONDS == end_time):
                 end = j - 1
-            elif (self.time[j - 1] / convert_input_time_to_seconds < end_time) and \
-                    (self.time[j] / convert_input_time_to_seconds > end_time):
+            elif (self.time[j - 1] / CONVERT_INPUT_TIME_TO_SECONDS < end_time) and \
+                    (self.time[j] / CONVERT_INPUT_TIME_TO_SECONDS > end_time):
                 end = j
         time_count = 0
 
@@ -288,29 +293,29 @@ class HrmData:
                 and when tahcycardias first occured (sec)
 
         """
-        dying_slow = 0
-        dying_fast = 0
-        self.brady_times = []
-        self.tachy_times = []
-        for l in range(1, len(self.time)):
-            if 60 * convert_input_time_to_seconds / \
-                    (self.time[l] - self.time[l - 1]) < brady_thresh and dying_slow == 0:
-                dying_slow = self.time[l - 1]
-            elif (dying_slow != 0) and \
-                    (60 * convert_input_time_to_seconds / (self.time[l] - self.time[l - 1]) > brady_thresh):
-                if self.time[l] - dying_slow > brady_time:
-                    self.brady_times.append(dying_slow / 1000)
-                dying_slow = 0
+
+
+        brady_detected = 0 # flag for brady detected
+        tachy_detected = 0 # flag for tachy detected
+        self.brady_times = [] # Instantiate list for bradycardia times
+        self.tachy_times = [] # Instantiate list for tachycardia times
+        for l in range(1, len(self.time)): # loop through all times
+            # check if last two heartbeats time under brady thresh
+            if 60 * CONVERT_INPUT_TIME_TO_SECONDS / (self.time[l] - self.time[l - 1]) < brady_thresh and brady_detected == 0:
+                # brady_detected is start time of bradycardia
+                brady_detected = self.time[l - 1]
+            elif (brady_detected != 0) and (60 * CONVERT_INPUT_TIME_TO_SECONDS / (self.time[l] - self.time[l - 1]) > brady_thresh):
+                if self.time[l] - brady_detected > brady_time:
+                    self.brady_times.append(brady_detected / CONVERT_INPUT_TIME_TO_SECONDS)
+                brady_detected = 0
             if (60 *
-                convert_input_time_to_seconds /
-                (self.time[l] -
-                 self.time[l -
-                           1])) < (self.tachy_thresh and dying_fast == 0):
-                dying_fast = self.time[l - 1]
-            elif (dying_fast != 0) and \
-                    (60 * convert_input_time_to_seconds / (self.time[l] - self.time[l - 1]) < tachy_thresh):
-                if self.time[l] - dying_fast > tachy_time:
-                    self.tachy_times.append(dying_fast / 1000)
-                dying_fast = 0
+                CONVERT_INPUT_TIME_TO_SECONDS /
+                (self.time[l] - self.time[l - 1])) < self.tachy_thresh and tachy_detected == 0:
+                tachy_detected = self.time[l - 1]
+            elif (tachy_detected != 0) and \
+                    (60 * CONVERT_INPUT_TIME_TO_SECONDS / (self.time[l] - self.time[l - 1]) < tachy_thresh):
+                if self.time[l] - tachy_detected > tachy_time:
+                    self.tachy_times.append(tachy_detected / CONVERT_INPUT_TIME_TO_SECONDS)
+                tachy_detected = 0
 
         self.anomaly_hr = [self.brady_times, self.tachy_times]

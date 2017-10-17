@@ -11,7 +11,7 @@ def test_for_anomalies_class():
         :rtype: Assertions
     """
 
-    myHrm = hrm_class.HrmData('fulltest.csv')
+    myHrm = hrm_class.HrmData('test_data/test_data2.csv')
     [bradyTimes, tachyTimes] = myHrm.find_anomaly_hr()
 
     assert round(bradyTimes[0],0)==30
