@@ -187,7 +187,7 @@ class HrmData:
         
         for x in range(0, len(self.time)):
             if self.time[x] > target_time:
-                if x + 1 >= len(time):
+                if x + 1 >= len(self.time):
                     raise ValueError(
                         'Target time is out of range of detected peaks')
                 instant_dt = self.time[x + 1] - self.time[x]
