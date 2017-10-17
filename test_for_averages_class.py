@@ -13,9 +13,10 @@ def test_for_average_class():
 
     myHrm = hrm_class.HrmData('full_test.csv')
 
-    assert round(myHrm.find_average_hr(), 0) == 78;
+    assert round(myHrm.average_hr, 0) == 78;
 
-    assert round(myHrm.find_average_hr(20, 45),0)==42;
+    myHrm.find_average_hr(20,45)
+    assert round(myHrm.average_hr,0)==42;
 
 def test_outofrange_average_class():
     """Unit test for checking ValueErrors
