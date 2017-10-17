@@ -92,6 +92,15 @@ class HrmData:
             return err_Bool
 
     def threshold(self, voltages, avg_voltage):
+        """Function for finding peaks above threshold
+
+            :param self: the hrm object
+            :param voltage: a list of voltages from csv file
+            :param avg_voltage: Threshold voltage for peaks
+            :rtype: list of peaks above threshold
+        """
+        
+        # Multiply by 2 for a guesstimation of appropriate threshold
         thresh_voltage = abs(avg_voltage) * 2
         peaks = numpy.where(voltages >= thresh_voltage)
         peaks1 = peaks[0]
