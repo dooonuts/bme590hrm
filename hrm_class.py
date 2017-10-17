@@ -1,7 +1,7 @@
 import numpy
 import pandas
 
-convert_input_time_to_seconds = 1000
+CONVERT_INPUT_TIME_TO_SECONDS = 1000
 """ This global variable is used to convert input timescale into seconds. Base value of 1000 assumes milliseconds, where time (ms) / convert_input_time_to_seconds = time (s)
     Adjust variable as necessary to ensure time in seconds
 """
@@ -195,20 +195,20 @@ class HrmData:
             :rtype: Average heart rate over user specified time (beats/min)
 
         """
-        begin = 0
-        end = 1
+        begin = 0 
+        end = 1 
 
         for j in range(1, len(self.time)):
             if (self.time[j - 1] /
-                    convert_input_time_to_seconds == begin_time):
+                    CONVERT_INPUT_TIME_TO_SECONDS == begin_time):
                 begin = j - 1
-            elif (self.time[j - 1] / convert_input_time_to_seconds < begin_time) and \
-                    (self.time[j] / convert_input_time_to_seconds > begin_time):
+            elif (self.time[j - 1] / CONVERT_INPUT_TIME_TO_SECONDS < begin_time) and \
+                    (self.time[j] / CONVERT_INPUT_TIME_TO_SECONDS > begin_time):
                 begin = j
-            if (self.time[j - 1] / convert_input_time_to_seconds == end_time):
+            if (self.time[j - 1] / CONVERT_INPUT_TIME_TO_SECONDS == end_time):
                 end = j - 1
-            elif (self.time[j - 1] / convert_input_time_to_seconds < end_time) and \
-                    (self.time[j] / convert_input_time_to_seconds > end_time):
+            elif (self.time[j - 1] / CONVERT_INPUT_TIME_TO_SECONDS < end_time) and \
+                    (self.time[j] / CONVERT_INPUT_TIME_TO_SECONDS > end_time):
                 end = j
         time_count = 0
 
@@ -255,29 +255,29 @@ class HrmData:
                 and when tahcycardias first occured (sec)
 
         """
-        dying_slow = 0
-        dying_fast = 0
-        self.brady_times = []
-        self.tachy_times = []
-        for l in range(1, len(self.time)):
-            if 60 * convert_input_time_to_seconds / \
-                    (self.time[l] - self.time[l - 1]) < brady_thresh and dying_slow == 0:
-                dying_slow = self.time[l - 1]
-            elif (dying_slow != 0) and \
-                    (60 * convert_input_time_to_seconds / (self.time[l] - self.time[l - 1]) > brady_thresh):
-                if self.time[l] - dying_slow > brady_time:
-                    self.brady_times.append(dying_slow / 1000)
-                dying_slow = 0
+
+
+        brady_detected = 0 "flag for brady detected"
+        tachy_detected = 0 "flag for tachy detected"
+        self.brady_times = [] "Instantiate list for bradycardia times"
+        self.tachy_times = [] "Instantiate list for tachycardia times"
+        for l in range(1, len(self.time)): "loop through all times"
+            if 60 * CONVERT_INPUT_TIME_TO_SECONDS / "check if last two heartbeats time under brady thresh"
+                    (self.time[l] - self.time[l - 1]) < brady_thresh and brady_detected == 0:
+                brady_detected = self.time[l - 1] "brady_detected is start time of bradycardia"
+            elif (brady_detected != 0) and \
+                    (60 * CONVERT_INPUT_TIME_TO_SECONDS / (self.time[l] - self.time[l - 1]) > brady_thresh):
+                if self.time[l] - brady_detected > brady_time: "if bradycardia occured for > brady thresh"
+                    self.brady_times.append(brady_detected / CONVERT_INPUT_TIME_TO_SECONDS)
+                brady_detected = 0 "reset brady detection"
             if (60 *
-                convert_input_time_to_seconds /
-                (self.time[l] -
-                 self.time[l -
-                           1])) < (self.tachy_thresh and dying_fast == 0):
-                dying_fast = self.time[l - 1]
-            elif (dying_fast != 0) and \
-                    (60 * convert_input_time_to_seconds / (self.time[l] - self.time[l - 1]) < tachy_thresh):
-                if self.time[l] - dying_fast > tachy_time:
-                    self.tachy_times.append(dying_fast / 1000)
-                dying_fast = 0
+                CONVERT_INPUT_TIME_TO_SECONDS /
+                (self.time[l] - self.time[l - 1])) < self.tachy_thresh and tachy_detected == 0: "same logic for tachy"
+                tachy_detected = self.time[l - 1]
+            elif (tachy_detected != 0) and \
+                    (60 * CONVERT_INPUT_TIME_TO_SECONDS / (self.time[l] - self.time[l - 1]) < tachy_thresh):
+                if self.time[l] - tachy_detected > tachy_time:
+                    self.tachy_times.append(tachy_detected / CONVERT_INPUT_TIME_TO_SECONDS)
+                tachy_detected = 0
 
         self.anomaly_hr = [self.brady_times, self.tachy_times]
