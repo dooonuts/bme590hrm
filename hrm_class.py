@@ -106,9 +106,11 @@ class HrmData:
             :rtype: list of peaks (ms)
         """
 
+        # Initialized with zero so that it could iterate through the array properly
+        # It was the greatest solution to this challenging dilemna
         peak_times = [0]
+        ecg_data = []
 
-        # put peak detection here
         names = ["times", "voltages"]
         data_error = self.file_checker(self.file, names)
         if (data_error):
