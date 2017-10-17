@@ -115,9 +115,11 @@ class HrmData:
             :rtype: list of peaks (ms)
         """
 
+        # Initialized with zero so that it could iterate through the array properly
+        # It was the greatest solution to this challenging dilemna
         peak_times = [0]
+        ecg_data = []
 
-        # put peak detection here
         names = ["times", "voltages"]
         data_error = self.file_checker(self.file, names)
         if (data_error):
@@ -290,22 +292,22 @@ class HrmData:
         """
 
 
-        brady_detected = 0 "flag for brady detected"
-        tachy_detected = 0 "flag for tachy detected"
-        self.brady_times = [] "Instantiate list for bradycardia times"
-        self.tachy_times = [] "Instantiate list for tachycardia times"
-        for l in range(1, len(self.time)): "loop through all times"
-            if 60 * CONVERT_INPUT_TIME_TO_SECONDS / "check if last two heartbeats time under brady thresh"
-                    (self.time[l] - self.time[l - 1]) < brady_thresh and brady_detected == 0:
-                brady_detected = self.time[l - 1] "brady_detected is start time of bradycardia"
-            elif (brady_detected != 0) and \
-                    (60 * CONVERT_INPUT_TIME_TO_SECONDS / (self.time[l] - self.time[l - 1]) > brady_thresh):
-                if self.time[l] - brady_detected > brady_time: "if bradycardia occured for > brady thresh"
+        brady_detected = 0 # flag for brady detected
+        tachy_detected = 0 # flag for tachy detected
+        self.brady_times = [] # Instantiate list for bradycardia times
+        self.tachy_times = [] # Instantiate list for tachycardia times
+        for l in range(1, len(self.time)): # loop through all times
+            # check if last two heartbeats time under brady thresh
+            if 60 * CONVERT_INPUT_TIME_TO_SECONDS / (self.time[l] - self.time[l - 1]) < brady_thresh and brady_detected == 0:
+                # brady_detected is start time of bradycardia
+                brady_detected = self.time[l - 1]
+            elif (brady_detected != 0) and (60 * CONVERT_INPUT_TIME_TO_SECONDS / (self.time[l] - self.time[l - 1]) > brady_thresh):
+                if self.time[l] - brady_detected > brady_time:
                     self.brady_times.append(brady_detected / CONVERT_INPUT_TIME_TO_SECONDS)
-                brady_detected = 0 "reset brady detection"
+                brady_detected = 0
             if (60 *
                 CONVERT_INPUT_TIME_TO_SECONDS /
-                (self.time[l] - self.time[l - 1])) < self.tachy_thresh and tachy_detected == 0: "same logic for tachy"
+                (self.time[l] - self.time[l - 1])) < self.tachy_thresh and tachy_detected == 0:
                 tachy_detected = self.time[l - 1]
             elif (tachy_detected != 0) and \
                     (60 * CONVERT_INPUT_TIME_TO_SECONDS / (self.time[l] - self.time[l - 1]) < tachy_thresh):
