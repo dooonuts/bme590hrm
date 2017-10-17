@@ -1,7 +1,8 @@
 import numpy
 import pandas
 
-convert_input_time_to_seconds = 1000
+# CONVERT_INPUT_TIME_TO_SECONDS = 1;
+
 """ This global variable is used to convert input timescale into seconds. Base value of 1000 assumes milliseconds, where time (ms) / convert_input_time_to_seconds = time (s)
     Adjust variable as necessary to ensure time in seconds
 """
@@ -22,6 +23,8 @@ class HrmData:
             anomaly_hr        (list): list of times the anomalies occurred
             brady_times       (list): times in which brady occurred
             tachy_times       (list): times in which tachy occurred
+            units              (int): the data is given in ms or sec for ms put 1000
+                                        for sec put 1
 
     """
 
@@ -33,7 +36,8 @@ class HrmData:
             brady_time=5,
             brady_thresh=60,
             tachy_time=5,
-            tachy_thresh=100):
+            tachy_thresh=100,
+            units=1):
         """Function that initializes values for the whole function
 
             Finds the peak that corresponds to given time, if there
@@ -48,6 +52,7 @@ class HrmData:
             :param brady_thresh (bpm): HR at which below is brady
             :param tachy_time (sec): time tachy has to last to be considered tachy
             :param tachy_thresh (bpm): HR at which above is tachy
+            :param units (int): the data is given in ms or sec, put 1000 for ms and 1 for sec 
             :rtype: heart rate at the specified time (beats/min)
 
         """
@@ -58,6 +63,7 @@ class HrmData:
         self.brady_thresh = brady_thresh
         self.tachy_time = tachy_time
         self.tachy_thresh = tachy_thresh
+        self.units = units
 
         peak_times = self.peak_detection()
 
@@ -115,9 +121,12 @@ class HrmData:
             :rtype: list of peaks (ms)
         """
 
+        # Initialized with zero so that it could iterate through the array properly
+        # It was the greatest solution to this challenging dilemna
         peak_times = [0]
+        times = numpy.empty
+        voltages = numpy.empty
 
-        # put peak detection here
         names = ["times", "voltages"]
         data_error = self.file_checker(self.file, names)
         if (data_error):
@@ -126,8 +135,9 @@ class HrmData:
             ecg_data = pandas.read_csv(
                 self.file, header=None, names=names, converters={
                     "times": float, "voltages": float})
-        times = ecg_data.times.values
-        voltages = ecg_data.voltages.values
+            times = ecg_data.times.values
+            voltages = ecg_data.voltages.values
+
 
         # Create Threshold
         avg_voltage = numpy.average(voltages)
@@ -153,16 +163,16 @@ class HrmData:
 
         return peak_times
 
-    @property
-    def find_instant_hr(self):
-        """Property of the hrm class
+    # @property
+    # def find_instant_hr(self):
+    #     """Property of the hrm class
 
-            :param self: the hrm object
-            :rtype: the instantaneous heartrate (beats/min)
+    #         :param self: the hrm object
+    #         :rtype: the instantaneous heartrate (beats/min)
 
-        """
+    #      """
 
-        return self.instantaneous_hr
+    #    return self.instantaneous_hr
 
     # @instantaneous_hr.setter
     def find_instant_hr(self, target_time=0):
@@ -182,7 +192,7 @@ class HrmData:
         
         for x in range(0, len(self.time)):
             if self.time[x] > target_time:
-                if x + 1 >= len(time):
+                if x + 1 >= len(self.time):
                     raise ValueError(
                         'Target time is out of range of detected peaks')
                 instant_dt = self.time[x + 1] - self.time[x]
@@ -191,15 +201,15 @@ class HrmData:
         inst = (60 / instant_dt) * 100
         self.instantaneous_hr = inst
 
-    @property
-    def find_average_hr(self):
-        """Property of the hrm class
+    # @property
+    # def find_average_hr(self):
+    #     """Property of the hrm class
 
-            :param self: the hrm object
-            :rtype: the average heart rate (beats/min)
+    #         :param self: the hrm object
+    #         :rtype: the average heart rate (beats/min)
 
-        """
-        return self.average_hr
+    #     """
+    #     return self.average_hr
 
     # @average_hr.setter
     def find_average_hr(self, begin_time=0, end_time=10):
@@ -227,26 +237,26 @@ class HrmData:
 
         # Start at index 1 because checking the j-1 index (to get the 0 pos)
         for j in range(1, len(self.time)):
-            if (self.time[j - 1] /
-                    convert_input_time_to_seconds == begin_time):
+            if (self.time[j - 1] / self.units == begin_time):
                 begin = j - 1
-            elif (self.time[j - 1] / convert_input_time_to_seconds < begin_time) and \
-                    (self.time[j] / convert_input_time_to_seconds > begin_time):
+            elif (begin_time == 0):
+                begin = 0
+            elif (self.time[j - 1] / self.units < begin_time) and \
+                    (self.time[j] / self.units > begin_time):
                 begin = j
-            if (self.time[j - 1] / convert_input_time_to_seconds == end_time):
+            if (self.time[j - 1] / self.units == end_time):
                 end = j - 1
-            elif (self.time[j - 1] / convert_input_time_to_seconds < end_time) and \
-                    (self.time[j] / convert_input_time_to_seconds > end_time):
+            elif (self.time[j - 1] / self.units < end_time) and \
+                    (self.time[j] / self.units > end_time):
                 end = j
         time_count = 0
 
         # Start at begin+1 because checking k-1 index
         # End at end+1 because range function is not inclusive for the last index
         for k in range(begin + 1, end + 1):
-            time_count = time_count + (self.time[k] - self.time[k - 1]) / 1000
+            time_count = time_count + (self.time[k] - self.time[k - 1]) / self.units
 
         div = end - begin
-        
         if div == 0:
             raise ValueError('Begin and End time are too close')
 
@@ -254,15 +264,15 @@ class HrmData:
         avg = 60 / time_avg
         self.average_hr = avg
 
-    @property
-    def find_anomaly_hr(self):
-        """Property of the hrm class
+    # @property
+    # def find_anomaly_hr(self):
+    #     """Property of the hrm class
 
-            :param self: the hrm object
-            :rtype: list of times for bradycardia and tachycardia
+    #         :param self: the hrm object
+    #         :rtype: list of times for bradycardia and tachycardia
 
-        """
-        return [self.brady_times, self.tachy_times]
+    #    """
+    #    return [self.brady_times, self.tachy_times]
 
     # @anomaly_hr.setter
     def find_anomaly_hr(
@@ -288,29 +298,29 @@ class HrmData:
                 and when tahcycardias first occured (sec)
 
         """
-        dying_slow = 0
-        dying_fast = 0
-        self.brady_times = []
-        self.tachy_times = []
-        for l in range(1, len(self.time)):
-            if 60 * convert_input_time_to_seconds / \
-                    (self.time[l] - self.time[l - 1]) < brady_thresh and dying_slow == 0:
-                dying_slow = self.time[l - 1]
-            elif (dying_slow != 0) and \
-                    (60 * convert_input_time_to_seconds / (self.time[l] - self.time[l - 1]) > brady_thresh):
-                if self.time[l] - dying_slow > brady_time:
-                    self.brady_times.append(dying_slow / 1000)
-                dying_slow = 0
+
+
+        brady_detected = 0 # flag for brady detected
+        tachy_detected = 0 # flag for tachy detected
+        self.brady_times = [] # Instantiate list for bradycardia times
+        self.tachy_times = [] # Instantiate list for tachycardia times
+        for l in range(1, len(self.time)): # loop through all times
+            # check if last two heartbeats time under brady thresh
+            if 60 * self.units / (self.time[l] - self.time[l - 1]) < brady_thresh and brady_detected == 0:
+                # brady_detected is start time of bradycardia
+                brady_detected = self.time[l - 1]
+            elif (brady_detected != 0) and (60 * self.units/ (self.time[l] - self.time[l - 1]) > brady_thresh):
+                if self.time[l] - brady_detected > brady_time:
+                    self.brady_times.append(brady_detected / self.units)
+                brady_detected = 0
             if (60 *
-                convert_input_time_to_seconds /
-                (self.time[l] -
-                 self.time[l -
-                           1])) < (self.tachy_thresh and dying_fast == 0):
-                dying_fast = self.time[l - 1]
-            elif (dying_fast != 0) and \
-                    (60 * convert_input_time_to_seconds / (self.time[l] - self.time[l - 1]) < tachy_thresh):
-                if self.time[l] - dying_fast > tachy_time:
-                    self.tachy_times.append(dying_fast / 1000)
-                dying_fast = 0
+                self.units /
+                (self.time[l] - self.time[l - 1])) < self.tachy_thresh and tachy_detected == 0:
+                tachy_detected = self.time[l - 1]
+            elif (tachy_detected != 0) and \
+                    (60 * self.units / (self.time[l] - self.time[l - 1]) < tachy_thresh):
+                if self.time[l] - tachy_detected > tachy_time:
+                    self.tachy_times.append(tachy_detected / self.units)
+                tachy_detected = 0
 
         self.anomaly_hr = [self.brady_times, self.tachy_times]
