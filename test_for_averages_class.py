@@ -13,7 +13,7 @@ def test_for_average_class():
 
     myHrm = hrm_class.HrmData('test_data/test_data2.csv')
 
-    assert round(myHrm.average_hr, 0) == 70;
+    assert round(myHrm.average_hr, 0) == 67;
 
     myHrm.find_average_hr(10,20)
     assert round(myHrm.average_hr,0)==72;

@@ -11,7 +11,8 @@ def main(filename,
         avg=False,
         ano=False):
     hrm_object = hrm_class.HrmData(filename);
-    print(hrm_object.average_hr);
+    print(hrm_object.anomaly_hr);
 
 if __name__ == '__main__':
-    main('test_data/test_data2.csv')
+    # main('test_data/test_data2.csv')
+    main('full_test.csv')

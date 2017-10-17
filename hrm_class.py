@@ -198,7 +198,7 @@ class HrmData:
                 instant_dt = self.time[x + 1] - self.time[x]
                 break
 
-        inst = (60 / instant_dt) * 100
+        inst = (60 / instant_dt) * self.units
         self.instantaneous_hr = inst
 
     # @property
