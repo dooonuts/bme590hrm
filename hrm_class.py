@@ -163,8 +163,14 @@ class HrmData:
             :rtype: heart rate at the specified time (beats/min)
 
         """
+        if target_time > self.time[len(self.time) - 1]:
+            raise ValueError('target time is out of range of detected peaks')
+        
         for x in range(0, len(self.time)):
             if self.time[x] > target_time:
+                if x + 1 >= len(time):
+                    raise ValueError(
+                        'Target time is out of range of detected peaks')
                 instant_dt = self.time[x + 1] - self.time[x]
                 break
 
@@ -195,9 +201,17 @@ class HrmData:
             :rtype: Average heart rate over user specified time (beats/min)
 
         """
+        if begin_time >= end_time:
+            raise ValueError('Begin time is before end time')
+        if self.time[len(self.time) - 1] < end_time:
+            raise ValueError('End time occurs outside of range of csv file')
+        if self.time[len(self.time) - 1] < begin_time:
+            raise ValueError('Begin time occurs outside of range of csv file')
+        
         begin = 0
-        end = 1
+        end = 0
 
+        # Start at index 1 because checking the j-1 index (to get the 0 pos)
         for j in range(1, len(self.time)):
             if (self.time[j - 1] /
                     convert_input_time_to_seconds == begin_time):
@@ -212,10 +226,15 @@ class HrmData:
                 end = j
         time_count = 0
 
+        # Start at begin+1 because checking k-1 index
+        # End at end+1 because range function is not inclusive for the last index
         for k in range(begin + 1, end + 1):
             time_count = time_count + (self.time[k] - self.time[k - 1]) / 1000
 
         div = end - begin
+        
+        if div == 0:
+            raise ValueError('Begin and End time are too close')
 
         time_avg = time_count / div
         avg = 60 / time_avg
