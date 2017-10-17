@@ -91,6 +91,9 @@ class HrmData:
             err_Bool = True
             return err_Bool
 
+    def threshold(self):
+        
+
     def peak_detection(self):
         """Function that finds all the peaks in an ecg and returns them
 
