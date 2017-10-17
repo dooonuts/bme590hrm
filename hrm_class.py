@@ -1,7 +1,7 @@
 import numpy
 import pandas
 
-CONVERT_INPUT_TIME_TO_SECONDS = 1000
+CONVERT_INPUT_TIME_TO_SECONDS = 1
 
 """ This global variable is used to convert input timescale into seconds. Base value of 1000 assumes milliseconds, where time (ms) / convert_input_time_to_seconds = time (s)
     Adjust variable as necessary to ensure time in seconds
