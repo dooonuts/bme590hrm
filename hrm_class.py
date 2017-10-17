@@ -158,8 +158,8 @@ class HrmData:
                         0.5 * (second_peak - first_peak)):
                     peak_times.pop()
         peak_times.pop(0)
-        print(len(peak_times))
-        print(peak_times)
+        # print(len(peak_times))
+        # print(peak_times)
 
         return peak_times
 
