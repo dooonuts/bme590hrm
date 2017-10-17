@@ -1,7 +1,7 @@
 import numpy
 import pandas
 
-CONVERT_INPUT_TIME_TO_SECONDS = 1000
+# CONVERT_INPUT_TIME_TO_SECONDS = 1;
 
 """ This global variable is used to convert input timescale into seconds. Base value of 1000 assumes milliseconds, where time (ms) / convert_input_time_to_seconds = time (s)
     Adjust variable as necessary to ensure time in seconds
@@ -23,6 +23,8 @@ class HrmData:
             anomaly_hr        (list): list of times the anomalies occurred
             brady_times       (list): times in which brady occurred
             tachy_times       (list): times in which tachy occurred
+            units              (int): the data is given in ms or sec for ms put 1000
+                                        for sec put 1
 
     """
 
@@ -34,7 +36,8 @@ class HrmData:
             brady_time=5,
             brady_thresh=60,
             tachy_time=5,
-            tachy_thresh=100):
+            tachy_thresh=100,
+            units=1):
         """Function that initializes values for the whole function
 
             Finds the peak that corresponds to given time, if there
@@ -49,6 +52,7 @@ class HrmData:
             :param brady_thresh (bpm): HR at which below is brady
             :param tachy_time (sec): time tachy has to last to be considered tachy
             :param tachy_thresh (bpm): HR at which above is tachy
+            :param units (int): the data is given in ms or sec, put 1000 for ms and 1 for sec 
             :rtype: heart rate at the specified time (beats/min)
 
         """
@@ -59,6 +63,7 @@ class HrmData:
         self.brady_thresh = brady_thresh
         self.tachy_time = tachy_time
         self.tachy_thresh = tachy_thresh
+        self.units = units
 
         peak_times = self.peak_detection()
 
@@ -233,15 +238,15 @@ class HrmData:
         # Start at index 1 because checking the j-1 index (to get the 0 pos)
         for j in range(1, len(self.time)):
             if (self.time[j - 1] /
-                    CONVERT_INPUT_TIME_TO_SECONDS == begin_time):
+                    self.units == begin_time):
                 begin = j - 1
-            elif (self.time[j - 1] / CONVERT_INPUT_TIME_TO_SECONDS < begin_time) and \
-                    (self.time[j] / CONVERT_INPUT_TIME_TO_SECONDS > begin_time):
+            elif (self.time[j - 1] / self.units < begin_time) and \
+                    (self.time[j] / self.units > begin_time):
                 begin = j
-            if (self.time[j - 1] / CONVERT_INPUT_TIME_TO_SECONDS == end_time):
+            if (self.time[j - 1] / self.units == end_time):
                 end = j - 1
-            elif (self.time[j - 1] / CONVERT_INPUT_TIME_TO_SECONDS < end_time) and \
-                    (self.time[j] / CONVERT_INPUT_TIME_TO_SECONDS > end_time):
+            elif (self.time[j - 1] / self.units < end_time) and \
+                    (self.time[j] / self.units > end_time):
                 end = j
         time_count = 0
 
@@ -301,21 +306,21 @@ class HrmData:
         self.tachy_times = [] # Instantiate list for tachycardia times
         for l in range(1, len(self.time)): # loop through all times
             # check if last two heartbeats time under brady thresh
-            if 60 * CONVERT_INPUT_TIME_TO_SECONDS / (self.time[l] - self.time[l - 1]) < brady_thresh and brady_detected == 0:
+            if 60 * self.units / (self.time[l] - self.time[l - 1]) < brady_thresh and brady_detected == 0:
                 # brady_detected is start time of bradycardia
                 brady_detected = self.time[l - 1]
-            elif (brady_detected != 0) and (60 * CONVERT_INPUT_TIME_TO_SECONDS / (self.time[l] - self.time[l - 1]) > brady_thresh):
+            elif (brady_detected != 0) and (60 * self.units/ (self.time[l] - self.time[l - 1]) > brady_thresh):
                 if self.time[l] - brady_detected > brady_time:
-                    self.brady_times.append(brady_detected / CONVERT_INPUT_TIME_TO_SECONDS)
+                    self.brady_times.append(brady_detected / self.units)
                 brady_detected = 0
             if (60 *
-                CONVERT_INPUT_TIME_TO_SECONDS /
+                self.units /
                 (self.time[l] - self.time[l - 1])) < self.tachy_thresh and tachy_detected == 0:
                 tachy_detected = self.time[l - 1]
             elif (tachy_detected != 0) and \
-                    (60 * CONVERT_INPUT_TIME_TO_SECONDS / (self.time[l] - self.time[l - 1]) < tachy_thresh):
+                    (60 * self.units / (self.time[l] - self.time[l - 1]) < tachy_thresh):
                 if self.time[l] - tachy_detected > tachy_time:
-                    self.tachy_times.append(tachy_detected / CONVERT_INPUT_TIME_TO_SECONDS)
+                    self.tachy_times.append(tachy_detected / self.units)
                 tachy_detected = 0
 
         self.anomaly_hr = [self.brady_times, self.tachy_times]
