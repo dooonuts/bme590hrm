@@ -44,9 +44,5 @@ M2 = zeros(240000,2);
 M2(:,1) = linspace(0,240,240000);
 M2(:,2) = cat(1,M(:,2),M(:,2));
 
-cd('C:\Users\User\Documents');
-fid = fopen('full_test.csv','w+');
-fprintf(fid, '%s,', 'times');
-fprintf(fid, '%s\n', 'voltages');
-fclose(fid);
+cd('C:\Users\User\bme590hrm');
 dlmwrite('full_test.csv',M2,'-append');

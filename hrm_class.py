@@ -306,19 +306,16 @@ class HrmData:
         self.tachy_times = [] # Instantiate list for tachycardia times
         for l in range(1, len(self.time)): # loop through all times
             # check if last two heartbeats time under brady thresh
-            if 60 * self.units / (self.time[l] - self.time[l - 1]) < brady_thresh and brady_detected == 0:
+            if (60 * self.units / (self.time[l] - self.time[l - 1])) < brady_thresh and brady_detected == 0:
                 # brady_detected is start time of bradycardia
                 brady_detected = self.time[l - 1]
-            elif (brady_detected != 0) and (60 * self.units/ (self.time[l] - self.time[l - 1]) > brady_thresh):
+            elif (brady_detected != 0) and (60 * self.units / (self.time[l] - self.time[l - 1]) > brady_thresh):
                 if self.time[l] - brady_detected > brady_time:
                     self.brady_times.append(brady_detected / self.units)
                 brady_detected = 0
-            if (60 *
-                self.units /
-                (self.time[l] - self.time[l - 1])) < self.tachy_thresh and tachy_detected == 0:
+            if (60 * self.units / (self.time[l] - self.time[l - 1])) > tachy_thresh and tachy_detected == 0:
                 tachy_detected = self.time[l - 1]
-            elif (tachy_detected != 0) and \
-                    (60 * self.units / (self.time[l] - self.time[l - 1]) < tachy_thresh):
+            elif (tachy_detected != 0) and (60 * self.units / (self.time[l] - self.time[l - 1]) < tachy_thresh):
                 if self.time[l] - tachy_detected > tachy_time:
                     self.tachy_times.append(tachy_detected / self.units)
                 tachy_detected = 0
