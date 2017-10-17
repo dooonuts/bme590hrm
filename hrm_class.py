@@ -2,6 +2,7 @@ import numpy
 import pandas
 
 CONVERT_INPUT_TIME_TO_SECONDS = 1000
+
 """ This global variable is used to convert input timescale into seconds. Base value of 1000 assumes milliseconds, where time (ms) / convert_input_time_to_seconds = time (s)
     Adjust variable as necessary to ensure time in seconds
 """
@@ -118,7 +119,8 @@ class HrmData:
         # Initialized with zero so that it could iterate through the array properly
         # It was the greatest solution to this challenging dilemna
         peak_times = [0]
-        ecg_data = []
+        times = numpy.empty
+        voltages = numpy.empty
 
         names = ["times", "voltages"]
         data_error = self.file_checker(self.file, names)
@@ -128,8 +130,9 @@ class HrmData:
             ecg_data = pandas.read_csv(
                 self.file, header=None, names=names, converters={
                     "times": float, "voltages": float})
-        times = ecg_data.times.values
-        voltages = ecg_data.voltages.values
+            times = ecg_data.times.values
+            voltages = ecg_data.voltages.values
+
 
         # Create Threshold
         avg_voltage = numpy.average(voltages)
