@@ -16,7 +16,7 @@ def test_for_average_class():
     assert round(myHrm.average_hr, 0) == 67;
 
     myHrm.find_average_hr(10,20)
-    assert round(myHrm.average_hr,0)==72;
+    assert round(myHrm.average_hr,0)==68;
 
 def test_outofrange_average_class():
     """Unit test for checking ValueErrors

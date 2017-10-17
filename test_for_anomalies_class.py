@@ -12,8 +12,7 @@ def test_for_anomalies_class():
     """
 
 
-
-    myHrm = hrm_class.HrmData('test_data/test_data2.csv')
+    myHrm = hrm_class.HrmData('full_test.csv')
     [bradyTimes, tachyTimes] = myHrm.anomaly_hr
 
     assert round(bradyTimes[0],0)==30

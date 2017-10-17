@@ -9,9 +9,11 @@ def main(filename,
         tachy_time=5,
         inst=False,
         avg=False,
-        ano=False):
+        ano=False,
+        units=1):
     hrm_object = hrm_class.HrmData(filename);
-    print(hrm_object.anomaly_hr);
+    print(hrm_object.anomaly_hr)
+    print(hrm_object.brady_times)
 
 if __name__ == '__main__':
     # main('test_data/test_data2.csv')

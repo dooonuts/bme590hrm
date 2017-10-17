@@ -286,4 +286,4 @@ def main(
     
 
 if __name__ == '__main__':
-    main('test_data/test_data29.csv')
+   main('full_test.csv', 0, 30, 50, 100, 10, 10, ano = True)
