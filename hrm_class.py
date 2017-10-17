@@ -162,16 +162,16 @@ class HrmData:
 
         return peak_times
 
-    @property
-    def find_instant_hr(self):
-        """Property of the hrm class
+    # @property
+    # def find_instant_hr(self):
+    #     """Property of the hrm class
 
-            :param self: the hrm object
-            :rtype: the instantaneous heartrate (beats/min)
+    #         :param self: the hrm object
+    #         :rtype: the instantaneous heartrate (beats/min)
 
-        """
+    #      """
 
-        return self.instantaneous_hr
+    #    return self.instantaneous_hr
 
     # @instantaneous_hr.setter
     def find_instant_hr(self, target_time=0):
@@ -200,15 +200,15 @@ class HrmData:
         inst = (60 / instant_dt) * 100
         self.instantaneous_hr = inst
 
-    @property
-    def find_average_hr(self):
-        """Property of the hrm class
+    # @property
+    # def find_average_hr(self):
+    #     """Property of the hrm class
 
-            :param self: the hrm object
-            :rtype: the average heart rate (beats/min)
+    #         :param self: the hrm object
+    #         :rtype: the average heart rate (beats/min)
 
-        """
-        return self.average_hr
+    #     """
+    #     return self.average_hr
 
     # @average_hr.setter
     def find_average_hr(self, begin_time=0, end_time=10):
@@ -236,9 +236,10 @@ class HrmData:
 
         # Start at index 1 because checking the j-1 index (to get the 0 pos)
         for j in range(1, len(self.time)):
-            if (self.time[j - 1] /
-                    self.units == begin_time):
+            if (self.time[j - 1] / self.units == begin_time):
                 begin = j - 1
+            elif (begin_time == 0):
+                begin = 0
             elif (self.time[j - 1] / self.units < begin_time) and \
                     (self.time[j] / self.units > begin_time):
                 begin = j
@@ -252,10 +253,9 @@ class HrmData:
         # Start at begin+1 because checking k-1 index
         # End at end+1 because range function is not inclusive for the last index
         for k in range(begin + 1, end + 1):
-            time_count = time_count + (self.time[k] - self.time[k - 1]) / 1000
+            time_count = time_count + (self.time[k] - self.time[k - 1]) / self.units
 
         div = end - begin
-        
         if div == 0:
             raise ValueError('Begin and End time are too close')
 
@@ -263,15 +263,15 @@ class HrmData:
         avg = 60 / time_avg
         self.average_hr = avg
 
-    @property
-    def find_anomaly_hr(self):
-        """Property of the hrm class
+    # @property
+    # def find_anomaly_hr(self):
+    #     """Property of the hrm class
 
-            :param self: the hrm object
-            :rtype: list of times for bradycardia and tachycardia
+    #         :param self: the hrm object
+    #         :rtype: list of times for bradycardia and tachycardia
 
-        """
-        return [self.brady_times, self.tachy_times]
+    #    """
+    #    return [self.brady_times, self.tachy_times]
 
     # @anomaly_hr.setter
     def find_anomaly_hr(
