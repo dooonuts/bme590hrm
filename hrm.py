@@ -6,15 +6,17 @@ import pandas
 import scipy.signal
 import matplotlib.pyplot as plt
 
+
 def file_checker(ecg_data_file, names):
     try:
-        df = pandas.read_csv(ecg_data_file, header = None, names = names, \
-                converters = {"times" : float, "voltages" : float})
+        df = pandas.read_csv(ecg_data_file, header=None, names=names,
+                             converters={"times": float, "voltages": float})
         err_Bool = False
         return err_Bool
     except ValueError:
         err_Bool = True
         return err_Bool
+
 
 def peak_detector(ecg_data_file):
     """Function to find all of the peaks in the csv
@@ -24,17 +26,17 @@ def peak_detector(ecg_data_file):
         :param ecg_data: the initial csv file given
         :rtype: list of times where a peak occured
     """
-    peak_times=[0]
+    peak_times = [0]
 
-    names = ["times","voltages"]
+    names = ["times", "voltages"]
     data_error = False
     data_error = file_checker(ecg_data_file, names)
-    if (data_error == True):
+    if (data_error):
         print("Non-Numeric Value Entered")
         return peak_times
 
-    ecg_data = pandas.read_csv(ecg_data_file, header = None, names = names, \
-            converters = {"times" : float, "voltages": float})
+    ecg_data = pandas.read_csv(ecg_data_file, header=None, names=names,
+                               converters={"times": float, "voltages": float})
     times = ecg_data.times.values
     voltages = ecg_data.voltages.values
 
@@ -45,24 +47,25 @@ def peak_detector(ecg_data_file):
     peaks = numpy.where(voltages >= thresh_voltage)
     peaks1 = peaks[0]
     peaks2 = peaks1.tolist()
-    first_peak = 0.0;
-    second_peak = 0.0;
+    first_peak = 0.0
+    second_peak = 0.0
     for i in range(1, len(peaks2) - 1):
-       if (voltages[peaks2[i]] >= voltages[peaks2[i - 1]]) and \
-               (voltages[peaks2[i]] >= voltages[peaks2[i + 1]]):
-           recent_val = peak_times[len(peak_times) - 1]
-           peak_times.append(times[peaks2[i]])
-           if(len(peak_times)==2):
-               first_peak = times[peaks2[i]]
-           if(len(peak_times)==3 and times[peaks2[i]]-recent_val >= 0.1):
-               second_peak = times[peaks2[i]]
-           elif (len(peak_times)==3 and times[peaks2[i]]-recent_val <= 0.1):
-               peak_times.pop()
-           if(times[peaks2[i]] - recent_val <= 0.5*(second_peak-first_peak)):
-               peak_times.pop()
+        if (voltages[peaks2[i]] >= voltages[peaks2[i - 1]]) and \
+                (voltages[peaks2[i]] >= voltages[peaks2[i + 1]]):
+            recent_val = peak_times[len(peak_times) - 1]
+            peak_times.append(times[peaks2[i]])
+            if(len(peak_times) == 2):
+                first_peak = times[peaks2[i]]
+            if(len(peak_times) == 3 and times[peaks2[i]] - recent_val >= 0.1):
+                second_peak = times[peaks2[i]]
+            elif (len(peak_times) == 3 and times[peaks2[i]] - recent_val <= 0.1):
+                peak_times.pop()
+            if(times[peaks2[i]] - recent_val <= 0.5 * (second_peak - first_peak)):
+                peak_times.pop()
     peak_times.pop(0)
 
     return peak_times
+
 
 def instant(time, target_time):
     """Function that finds the heart rate at an instant time
@@ -119,7 +122,7 @@ def average(time, begin_time, end_time):
     for i in range(1, len(time)):
         if time[i - 1] == begin_time:
             begin = i - 1
-        elif time[i - 1]  < begin_time and time[i] > begin_time:
+        elif time[i - 1] < begin_time and time[i] > begin_time:
             begin = i
         if time[i - 1] == end_time:
             end = i - 1
@@ -166,7 +169,7 @@ def anomaly(time, brady_thresh, brady_time, tachy_thresh, tachy_time):
     tachyTimes = []
     counter = 0
     for i in range(1, len(time)):
-        print(60/(time[i]- time[i-1]))
+        print(60 / (time[i] - time[i - 1]))
         if (60 / (time[i] - time[i - 1]) < brady_thresh) and \
                 (dying_slow == 0):
             dying_slow = time[i - 1]
@@ -262,7 +265,7 @@ def main(
             return brady, tachy
 
     ret_file.close()
-    
+
 
 if __name__ == '__main__':
-    main('full_test.csv', brady_threshold= 60, ano=True)
+    main('full_test.csv', brady_threshold=60, ano=True)

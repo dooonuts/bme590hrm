@@ -52,7 +52,7 @@ class HrmData:
             :param brady_thresh (bpm): HR at which below is brady
             :param tachy_time (sec): time tachy has to last to be considered tachy
             :param tachy_thresh (bpm): HR at which above is tachy
-            :param units (int): the data is given in ms or sec, put 1000 for ms and 1 for sec 
+            :param units (int): the data is given in ms or sec, put 1000 for ms and 1 for sec
             :rtype: heart rate at the specified time (beats/min)
 
         """
@@ -105,7 +105,7 @@ class HrmData:
             :param avg_voltage: Threshold voltage for peaks
             :rtype: list of peaks above threshold
         """
-        
+
         # Multiply by 2 for a guesstimation of appropriate threshold
         thresh_voltage = abs(avg_voltage) * 2
         peaks = numpy.where(voltages >= thresh_voltage)
@@ -138,7 +138,6 @@ class HrmData:
             times = ecg_data.times.values
             voltages = ecg_data.voltages.values
 
-
         # Create Threshold
         avg_voltage = numpy.average(voltages)
         peaks = self.threshold(voltages, avg_voltage)
@@ -152,7 +151,8 @@ class HrmData:
                 peak_times.append(times[peaks[i]])
                 if (len(peak_times) == 2):
                     first_peak = times[peaks[i]]
-                if (len(peak_times) == 3 and times[peaks[i]] - recent_val >= 0.1):
+                if (len(peak_times) ==
+                        3 and times[peaks[i]] - recent_val >= 0.1):
                     second_peak = times[peaks[i]]
                 elif (len(peak_times) == 3 and times[peaks[i]] - recent_val <= 0.1):
                     peak_times.pop()
@@ -191,7 +191,7 @@ class HrmData:
         """
         if target_time > self.time[len(self.time) - 1]:
             raise ValueError('target time is out of range of detected peaks')
-        
+
         for x in range(0, len(self.time)):
             if self.time[x] > target_time:
                 if x + 1 >= len(self.time):
@@ -233,7 +233,7 @@ class HrmData:
             raise ValueError('End time occurs outside of range of csv file')
         if self.time[len(self.time) - 1] < begin_time:
             raise ValueError('Begin time occurs outside of range of csv file')
-        
+
         begin = 0
         end = 0
 
@@ -254,9 +254,11 @@ class HrmData:
         time_count = 0
 
         # Start at begin+1 because checking k-1 index
-        # End at end+1 because range function is not inclusive for the last index
+        # End at end+1 because range function is not inclusive for the last
+        # index
         for k in range(begin + 1, end + 1):
-            time_count = time_count + (self.time[k] - self.time[k - 1]) / self.units
+            time_count = time_count + \
+                (self.time[k] - self.time[k - 1]) / self.units
 
         div = end - begin
         if div == 0:
@@ -301,24 +303,31 @@ class HrmData:
 
         """
 
-        brady_detected = 0 # flag for brady detected
-        tachy_detected = 0 # flag for tachy detected
-        self.brady_times = [] # Instantiate list for bradycardia times
-        self.tachy_times = [] # Instantiate list for tachycardia times
-        for l in range(1, len(self.time)): # loop through all times
+        brady_detected = 0  # flag for brady detected
+        tachy_detected = 0  # flag for tachy detected
+        self.brady_times = []  # Instantiate list for bradycardia times
+        self.tachy_times = []  # Instantiate list for tachycardia times
+        for l in range(1, len(self.time)):  # loop through all times
             # check if last two heartbeats time under brady thresh
-            if (60 * self.units / (self.time[l] - self.time[l - 1])) < brady_thresh and brady_detected == 0:
+            if (60 *
+                self.units /
+                (self.time[l] -
+                 self.time[l -
+                           1])) < brady_thresh and brady_detected == 0:
                 # brady_detected is start time of bradycardia
                 brady_detected = self.time[l - 1]
             elif (brady_detected != 0) and (60 * self.units / (self.time[l] - self.time[l - 1]) > brady_thresh):
                 if self.time[l] - brady_detected > brady_time / self.units:
                     self.brady_times.append(brady_detected / self.units)
                 brady_detected = 0
-            if (60 * self.units / (self.time[l] - self.time[l - 1])) > tachy_thresh and tachy_detected == 0:
+            if (60 *
+                self.units /
+                (self.time[l] -
+                 self.time[l -
+                           1])) > tachy_thresh and tachy_detected == 0:
                 tachy_detected = self.time[l - 1]
             elif (tachy_detected != 0) and (60 * self.units / (self.time[l] - self.time[l - 1]) < tachy_thresh):
                 if self.time[l] - tachy_detected > tachy_time / self.units:
                     self.tachy_times.append(tachy_detected / self.units)
                 tachy_detected = 0
         self.anomaly_hr = [self.brady_times, self.tachy_times]
-
