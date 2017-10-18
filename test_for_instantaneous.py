@@ -11,7 +11,8 @@ def test_for_instantaneous():
         :rtype: Assertions
     """
     # Test for evaluating instantaneous heart rate
-    assert hrm.main('full_test.csv', inst=True) == 80
+    inst = hrm.main('full_test.csv',inst=True)
+    assert round(inst,0) == 60
 
     # Test for out of bounds error
     with pytest.raises(ValueError):
