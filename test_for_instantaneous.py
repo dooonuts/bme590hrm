@@ -12,7 +12,7 @@ def test_for_instantaneous():
     """
     # Test for evaluating instantaneous heart rate
     inst = hrm.main('full_test.csv',inst=True)
-    assert round(inst,0) == 60
+    assert round(inst,0) == 80
 
     # Test for out of bounds error
     with pytest.raises(ValueError):
