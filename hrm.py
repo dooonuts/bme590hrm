@@ -76,13 +76,13 @@ def peak_detector(ecg_data_file):
            peak_times.append(times[peaks2[i]])
            if(len(peak_times)==2):
                first_peak = times[peaks2[i]]
-           if(len(peak_times)==3):
+           if(len(peak_times)==3 and times[peaks2[i]]-recent_val >= 0.1):
                second_peak = times[peaks2[i]]
+           elif (len(peak_times)==3 and times[peaks2[i]]-recent_val <= 0.1):
+               peak_times.pop()
            if(times[peaks2[i]] - recent_val <= 0.5*(second_peak-first_peak)):
                peak_times.pop()
     peak_times.pop(0)
-    # print(len(peak_times))
-    # print(peak_times)
 
     return peak_times
 
@@ -137,21 +137,20 @@ def average(time, begin_time, end_time):
 
     begin = 0
     end = 0
-
     for i in range(1, len(time)):
-        if time[i - 1] / 1000 == begin_time:
+        if time[i - 1] == begin_time:
             begin = i - 1
-        elif time[i - 1] / 1000 < begin_time and time[i] / 1000 > begin_time:
+        elif time[i - 1]  < begin_time and time[i] > begin_time:
             begin = i
-        if time[i - 1] / 1000 == end_time:
+        if time[i - 1] == end_time:
             end = i - 1
-        elif (time[i - 1] / 1000 < end_time) and (time[i] / 1000 > end_time):
+        elif (time[i - 1] < end_time) and (time[i] > end_time):
             end = i
 
     time_count = 0
 
     for k in range(begin + 1, end + 1):
-        time_count = time_count + (time[k] - time[k - 1]) / 1000
+        time_count = time_count + (time[k] - time[k - 1])
 
     div = end - begin
 
@@ -288,4 +287,4 @@ def main(
     
 
 if __name__ == '__main__':
-   main('full_test.csv', inst=True)
+   main('full_test.csv', ano=True)
