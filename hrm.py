@@ -265,4 +265,4 @@ def main(
     
 
 if __name__ == '__main__':
-    main('full_test.csv', inst=True)
+    main('full_test.csv', ano=True)

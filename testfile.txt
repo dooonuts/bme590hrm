@@ -1,1 +1,2 @@
-Instantaneous HR: 0.08
+Brady times: 
+ Tachy times: 

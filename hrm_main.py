@@ -17,4 +17,4 @@ def main(filename,
 
 if __name__ == '__main__':
     # main('test_data/test_data2.csv')
-    main('full_test.csv')
+    main('full_test.csv',units=1000)

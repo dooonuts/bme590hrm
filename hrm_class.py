@@ -319,5 +319,5 @@ class HrmData:
                 if self.time[l] - tachy_detected > tachy_time / self.units:
                     self.tachy_times.append(tachy_detected / self.units)
                 tachy_detected = 0
-
         self.anomaly_hr = [self.brady_times, self.tachy_times]
+
