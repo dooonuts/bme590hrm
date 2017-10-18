@@ -152,8 +152,10 @@ class HrmData:
                 peak_times.append(times[peaks[i]])
                 if (len(peak_times) == 2):
                     first_peak = times[peaks[i]]
-                if (len(peak_times) == 3):
+                if (len(peak_times) == 3 and times[peaks[i]] - recent_val >= 0.1):
                     second_peak = times[peaks[i]]
+                elif (len(peak_times) == 3 and times[peaks[i]] - recent_val <= 0.1):
+                    peak_times.pop()
                 if (times[peaks[i]] - recent_val <=
                         0.5 * (second_peak - first_peak)):
                     peak_times.pop()
@@ -298,7 +300,6 @@ class HrmData:
                 and when tahcycardias first occured (sec)
 
         """
-
 
         brady_detected = 0 # flag for brady detected
         tachy_detected = 0 # flag for tachy detected

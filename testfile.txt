@@ -1,2 +1,2 @@
-Brady times: 
- Tachy times: 
+Brady times: 29.974 149.97 
+ Tachy times: 74.974 194.97 

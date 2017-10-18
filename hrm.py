@@ -89,6 +89,7 @@ def instant(time, target_time):
                     'Target time is out of range of detected peaks')
             instant_dt = time[x + 1] - time[x]
             break
+
     return (60 / instant_dt)
 
 
@@ -165,23 +166,22 @@ def anomaly(time, brady_thresh, brady_time, tachy_thresh, tachy_time):
     tachyTimes = []
     counter = 0
     for i in range(1, len(time)):
-        if (60000 / (time[i] - time[i - 1]) < brady_thresh) and \
+        print(60/(time[i]- time[i-1]))
+        if (60 / (time[i] - time[i - 1]) < brady_thresh) and \
                 (dying_slow == 0):
             dying_slow = time[i - 1]
-            print("here")
         elif (dying_slow != 0) and \
-                (60000 / (time[i] - time[i - 1]) > brady_thresh):
+                (60 / (time[i] - time[i - 1]) > brady_thresh):
             if time[i] - dying_slow > brady_time:
-                bradyTimes.append(dying_slow / 1000)
-                print("here2")
+                bradyTimes.append(dying_slow)
             dying_slow = 0
-        if (60000 / (time[i] - time[i - 1]) > tachy_thresh) and \
+        if (60 / (time[i] - time[i - 1]) > tachy_thresh) and \
                 (dying_fast == 0):
             dying_fast = time[i - 1]
         elif (dying_fast != 0) and \
-                (60000 / (time[i] - time[i - 1]) < tachy_thresh):
+                (60 / (time[i] - time[i - 1]) < tachy_thresh):
             if time[i] - dying_fast > tachy_time:
-                tachyTimes.append(dying_fast / 1000)
+                tachyTimes.append(dying_fast)
             dying_fast = 0
     return bradyTimes, tachyTimes
 
@@ -265,4 +265,4 @@ def main(
     
 
 if __name__ == '__main__':
-    main('full_test.csv', ano=True)
+    main('full_test.csv', brady_threshold= 60, ano=True)
