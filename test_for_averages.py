@@ -12,10 +12,10 @@ def test_average():
     """
 
     # Test for default values of average
-    assert round(hrm.main('test_data/test_data2.csv', avg=True), 0) == 78
+    assert round(hrm.main('full_test.csv', avg=True), 0) == 78
 
     # Test for range
-    assert round(hrm.main('test_data/test_data2.csv', 30, 45, avg=True), 0) == 42
+    assert round(hrm.main('full_test.csv', 30, 45, avg=True), 0) == 42
 
 
 def test_outofrange_average():
@@ -27,12 +27,12 @@ def test_outofrange_average():
 
     # Test for the beginning is out of range
     with pytest.raises(ValueError):
-        hrm.main('test_data/test_data2.csv', 250, avg=True)
+        hrm.main('full_test.csv', 250, avg=True)
 
     # Test for ending out of range
     with pytest.raises(ValueError):
-        hrm.main('test_data/test_data2.csv', 0, 250, avg=True)
+        hrm.main('full_test.csv', 0, 250, avg=True)
 
     # Test for if begin time is after end time
     with pytest.raises(ValueError):
-        hrm.main('test_data/test_data2.csv', 300, 250, avg=True)
+        hrm.main('full_test.csv', 300, 250, avg=True)
