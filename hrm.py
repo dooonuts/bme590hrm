@@ -38,28 +38,6 @@ def peak_detector(ecg_data_file):
     times = ecg_data.times.values
     voltages = ecg_data.voltages.values
 
-    # Differentiation/AutoCorr Method
-    # autocorr = numpy.correlate(voltages, voltages, mode='same')
-
-
-    # diff = numpy.diff(autocorr)/numpy.diff(times);
-
-    # diff = numpy.diff(autocorr)
-
-    # for k in range(0,numpy.size(diff)):
-    #    print(k)
-    #    print(diff[k])
-    #    if((diff[k] >= -0.0015) and (diff[k] <= 0.0015)):
-        # if((diff[k] >= -1) and (diff[k] <= 1)):
-            # peakTimes.append(times[k])
-
-    # peakTimes.pop(0);
-
-    # Data Visualization
-    # plt.plot(times, autocorr)
-    # plt.plot(times, voltages)
-    # plt.show()
-
     # Threshold Method
     avg_voltage = numpy.average(voltages)
     thresh_voltage = abs(avg_voltage) * 2
@@ -111,7 +89,7 @@ def instant(time, target_time):
                     'Target time is out of range of detected peaks')
             instant_dt = time[x + 1] - time[x]
             break
-    return (60 / instant_dt) / 1000
+    return (60 / instant_dt)
 
 
 def average(time, begin_time, end_time):
@@ -287,4 +265,4 @@ def main(
     
 
 if __name__ == '__main__':
-   main('full_test.csv', ano=True)
+    main('full_test.csv', inst=True)

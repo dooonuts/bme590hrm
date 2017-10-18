@@ -13,7 +13,7 @@ def test_for_instantaneous_class():
     myHrm = hrm_class.HrmData('test_data/test_data2.csv')
 
     round_Instantaneous = round(myHrm.instantaneous_hr,0)
-    assert round_Instantaneous == 69
+    assert round_Instantaneous == 80
 
 
     with pytest.raises(ValueError):
