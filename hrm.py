@@ -111,7 +111,7 @@ def instant(time, target_time):
                     'Target time is out of range of detected peaks')
             instant_dt = time[x + 1] - time[x]
             break
-    return (60 / instant_dt)
+    return (60 / instant_dt) / 1000
 
 
 def average(time, begin_time, end_time):
