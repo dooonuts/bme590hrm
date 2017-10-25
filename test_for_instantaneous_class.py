@@ -17,4 +17,4 @@ def test_for_instantaneous_class():
 
 
     with pytest.raises(ValueError):
-        myHrm.find_instant_hr(30    )
+        myHrm.find_instant_hr(30)
