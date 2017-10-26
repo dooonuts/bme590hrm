@@ -307,6 +307,10 @@ class HrmData:
         tachy_detected = 0  # flag for tachy detected
         self.brady_times = []  # Instantiate list for bradycardia times
         self.tachy_times = []  # Instantiate list for tachycardia times
+
+        self.brady_tf = [] #Instantiate list for bradycardia true/false beats
+        self.tachy_tf = [] #Instantiate list for tachycardia true/false beats
+
         for l in range(1, len(self.time)):  # loop through all times
             # check if last two heartbeats time under brady thresh
             if (60 *
@@ -315,11 +319,19 @@ class HrmData:
                  self.time[l -
                            1])) < brady_thresh and brady_detected == 0:
                 # brady_detected is start time of bradycardia
-                brady_detected = self.time[l - 1]
+                brady_detected = self.time[l]
             elif (brady_detected != 0) and (60 * self.units / (self.time[l] - self.time[l - 1]) > brady_thresh):
                 if self.time[l] - brady_detected > brady_time / self.units:
                     self.brady_times.append(brady_detected / self.units)
                 brady_detected = 0
+            if (60 * self.units / (self.time[l] - self.time[l - 1])) <= brady_thresh)
+                self.brady_tf.append('TRUE')
+            if (60 * self.units / (self.time[l] - self.time[l - 1])) > brady_thresh)
+                self.brady_tf.append('FALSE')
+            if (60 * self.units / (self.time[l] - self.time[l - 1])) >= tachy_thresh)
+                self.tachy_tf.append('TRUE')
+            if (60 * self.units / (self.time[l] - self.time[l - 1])) < tachy_thresh)
+                self.tachy_tf.append('FALSE')
             if (60 *
                 self.units /
                 (self.time[l] -
@@ -331,3 +343,4 @@ class HrmData:
                     self.tachy_times.append(tachy_detected / self.units)
                 tachy_detected = 0
         self.anomaly_hr = [self.brady_times, self.tachy_times]
+        self.anomaly_tf = [self.brady_tf, self.tachy_tf]
