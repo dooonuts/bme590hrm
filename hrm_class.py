@@ -324,15 +324,15 @@ class HrmData:
                 if self.time[l] - brady_detected > brady_time / self.units:
                     self.brady_times.append(brady_detected / self.units)
                 brady_detected = 0
-            if (60 * self.units / (self.time[l] - self.time[l - 1])) <= brady_thresh)
+            if ((60 * self.units / (self.time[l] - self.time[l - 1])) <= brady_thresh):
                 self.brady_tf.append('TRUE')
-            if (60 * self.units / (self.time[l] - self.time[l - 1])) > brady_thresh)
+            if ((60 * self.units / (self.time[l] - self.time[l - 1])) > brady_thresh):
                 self.brady_tf.append('FALSE')
-            if (60 * self.units / (self.time[l] - self.time[l - 1])) >= tachy_thresh)
+            if ((60 * self.units / (self.time[l] - self.time[l - 1])) >= tachy_thresh):
                 self.tachy_tf.append('TRUE')
-            if (60 * self.units / (self.time[l] - self.time[l - 1])) < tachy_thresh)
+            if ((60 * self.units / (self.time[l] - self.time[l - 1])) < tachy_thresh):
                 self.tachy_tf.append('FALSE')
-            if (60 *
+            if ((60 *
                 self.units /
                 (self.time[l] -
                  self.time[l -
