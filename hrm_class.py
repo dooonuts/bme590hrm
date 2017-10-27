@@ -336,10 +336,10 @@ class HrmData:
                 self.units /
                 (self.time[l] -
                  self.time[l -
-                           1])) > tachy_thresh and tachy_detected == 0:
+                           1])) > tachy_thresh and tachy_detected == 0):
                 tachy_detected = self.time[l - 1]
             elif (tachy_detected != 0) and (60 * self.units / (self.time[l] - self.time[l - 1]) < tachy_thresh):
-                if self.time[l] - tachy_detected > tachy_time / self.units:
+                if (self.time[l] - tachy_detected) > (tachy_time / self.units):
                     self.tachy_times.append(tachy_detected / self.units)
                 tachy_detected = 0
         self.anomaly_hr = [self.brady_times, self.tachy_times]
