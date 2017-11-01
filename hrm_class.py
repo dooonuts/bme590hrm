@@ -18,7 +18,8 @@ class HrmData:
 
        Attributes:
             times             (list): list of times that a peak occurs
-            instantaneous_hr   (int): the last instantaneous hr computed
+            instantaneous_hr   (list): list of all instantaneous hr computed
+            instant_hr_target    (int): the instantaneous hr closest to the target time
             average_hr         (int): the last average hr computed
             anomaly_hr        (list): list of times the anomalies occurred
             brady_times       (list): times in which brady occurred
@@ -174,7 +175,7 @@ class HrmData:
 
     #      """
 
-    #    return self.instantaneous_hr
+    #    return self.instantaneous_hr and self.instant_hr_target
 
     # @instantaneous_hr.setter
     def find_instant_hr(self, target_time=0):
@@ -189,19 +190,22 @@ class HrmData:
             :rtype: heart rate at the specified time (beats/min)
 
         """
+        self.instantaneous_hr = []  # instantiate list of instantaneous hr
+
         if target_time > self.time[len(self.time) - 1]:
             raise ValueError('target time is out of range of detected peaks')
 
-        for x in range(0, len(self.time)):
-            if self.time[x] > target_time:
-                if x + 1 >= len(self.time):
-                    raise ValueError(
-                        'Target time is out of range of detected peaks')
-                instant_dt = self.time[x + 1] - self.time[x]
-                break
+        specified_time = 0 #marker for if target time is found
+        for x in range(1, len(self.time)):
+            temp_dt = self.time[x] - self.time[x - 1]
+            temp = (60 / temp_dt) * self.units
+            self.instantaneous_hr.append(temp)
+            if x == 1:
+                self.instantaneous_hr.append(temp)
+            if specified_time == 0 & x >= target_time:
+                specified_time = 1
+                self.instant_hr_target = temp
 
-        inst = (60 / instant_dt) * self.units
-        self.instantaneous_hr = inst
 
     # @property
     # def find_average_hr(self):

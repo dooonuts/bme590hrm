@@ -14,4 +14,4 @@ def main(filename,
     hrm_object = hrm_class.HrmData(filename);
 
 if __name__ == '__main__':
-    main('hrdata.csv',units=1)
+    main('test_data/test_data1.csv',units=1)
