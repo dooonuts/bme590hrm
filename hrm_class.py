@@ -26,6 +26,8 @@ class HrmData:
             tachy_times       (list): times in which tachy occurred
             units              (int): the data is given in ms or sec for ms put 1000
                                         for sec put 1
+            err              (value): the error that is propagated up
+            errBool        (boolean): error boolean for it it has error
 
     """
 
@@ -65,8 +67,10 @@ class HrmData:
         self.tachy_time = tachy_time
         self.tachy_thresh = tachy_thresh
         self.units = units
+        self.errBool = False
 
-        peak_times = self.peak_detection()
+        [peak_times, err] = self.peak_detection()
+        self.err = err
 
         self.time = peak_times
         self.find_instant_hr(begin_time)
@@ -96,10 +100,11 @@ class HrmData:
                 filename, header=None, names=names, converters={
                     "times": float, "voltages": float})
             err_Bool = False
+            err = null
             return err_Bool
-        except ValueError:
+        except ValueError as err:
             err_Bool = True
-            return err_Bool
+            return err_Bool, err
 
     def threshold(self, voltages, avg_voltage):
         """Function for finding peaks above threshold
@@ -132,9 +137,11 @@ class HrmData:
         voltages = numpy.empty
 
         names = ["times", "voltages"]
-        data_error = self.file_checker(self.file, names)
+        [data_error, err] = self.file_checker(self.file, names)
         if (data_error):
             print("Non-Numeric Value Entered")
+            self.errBool = True
+            return peak_times, err
         else:
             ecg_data = pandas.read_csv(
                 self.file, header=None, names=names, converters={
@@ -167,7 +174,7 @@ class HrmData:
         # print(len(peak_times))
         # print(peak_times)
 
-        return peak_times
+        return peak_times, err
 
     # @property
     # def find_instant_hr(self):
