@@ -27,7 +27,7 @@ class HrmData:
             units              (int): the data is given in ms or sec for ms put 1000
                                         for sec put 1
             err              (value): the error that is propagated up
-            errBool        (boolean): error boolean for it it has error
+            err_bool        (boolean): error boolean for it it has error
 
     """
 
@@ -67,7 +67,7 @@ class HrmData:
         self.tachy_time = tachy_time
         self.tachy_thresh = tachy_thresh
         self.units = units
-        self.errBool = False
+        self.err_bool = False
 
         [peak_times, err] = self.peak_detection()
         self.err = err
@@ -140,7 +140,7 @@ class HrmData:
         [data_error, err] = self.file_checker(self.file, names)
         if (data_error):
             print("Non-Numeric Value Entered")
-            self.errBool = True
+            self.err_bool = True
             return peak_times, err
         else:
             ecg_data = pandas.read_csv(
