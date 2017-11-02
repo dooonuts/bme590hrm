@@ -100,7 +100,7 @@ class HrmData:
                 filename, header=None, names=names, converters={
                     "times": float, "voltages": float})
             err_Bool = False
-            err = null
+            err = None
             return err_Bool
         except ValueError as err:
             err_Bool = True
