@@ -77,6 +77,9 @@ class HrmData:
             tachy_time,
             tachy_thresh)
 
+        print(self.brady_tf[29])
+        print(self.tachy_tf)
+
     def file_checker(self, filename, names):
         """Function that checks the file has the right types
             for ECG_data
@@ -328,14 +331,17 @@ class HrmData:
                 if self.time[l] - brady_detected > brady_time / self.units:
                     self.brady_times.append(brady_detected / self.units)
                 brady_detected = 0
+
+            myTrue = 'true'.strip('\'')
+            myFalse = 'false'.strip('\'')
             if ((60 * self.units / (self.time[l] - self.time[l - 1])) <= brady_thresh):
-                self.brady_tf.append('TRUE')
+                self.brady_tf.append(myTrue)
             if ((60 * self.units / (self.time[l] - self.time[l - 1])) > brady_thresh):
-                self.brady_tf.append('FALSE')
+                self.brady_tf.append(myFalse)
             if ((60 * self.units / (self.time[l] - self.time[l - 1])) >= tachy_thresh):
-                self.tachy_tf.append('TRUE')
+                self.tachy_tf.append(myTrue)
             if ((60 * self.units / (self.time[l] - self.time[l - 1])) < tachy_thresh):
-                self.tachy_tf.append('FALSE')
+                self.tachy_tf.append(myFalse)
             if ((60 *
                 self.units /
                 (self.time[l] -
