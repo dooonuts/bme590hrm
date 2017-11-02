@@ -101,7 +101,7 @@ class HrmData:
                     "times": float, "voltages": float})
             err_Bool = False
             err = None
-            return err_Bool
+            return err_Bool, err
         except ValueError as err:
             err_Bool = True
             return err_Bool, err
