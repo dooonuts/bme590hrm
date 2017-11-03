@@ -104,6 +104,7 @@ class HrmData:
             return err_Bool, err
         except ValueError as err:
             err_Bool = True
+            raise err
             return err_Bool, err
 
     def threshold(self, voltages, avg_voltage):
@@ -201,7 +202,9 @@ class HrmData:
 
         """
         self.instantaneous_hr = []  # instantiate list of instantaneous hr
-
+        
+        if len(self.time)==0:
+            raise ValueError('No peaks')
         if target_time > self.time[len(self.time) - 1]:
             raise ValueError('target time is out of range of detected peaks')
 
@@ -241,6 +244,8 @@ class HrmData:
             :rtype: Average heart rate over user specified time (beats/min)
 
         """
+        if len(self.time) == 0:
+            raise ValueError('No peaks')
         if begin_time >= end_time:
             raise ValueError('Begin time is before end time')
         if self.time[len(self.time) - 1] < end_time:
@@ -316,6 +321,8 @@ class HrmData:
                 and when tahcycardias first occured (sec)
 
         """
+        if len(self.time) == 0:
+            raise ValueError('No Peaks') 
 
         brady_detected = 0  # flag for brady detected
         tachy_detected = 0  # flag for tachy detected
